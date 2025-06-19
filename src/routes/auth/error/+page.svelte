@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/stores'
 
-	let searchParams = $derived(new URLSearchParams($page.url.hash.substring(1)));
+	let searchParams = $derived(new URLSearchParams($page.url.hash.substring(1)))
 
 	// TODO: sentry log?
 </script>

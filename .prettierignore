@@ -1,8 +1,35 @@
-# Ignore files for PNPM, NPM and YARN
+# 📦 Package manager lockfiles
 pnpm-lock.yaml
 package-lock.json
 yarn.lock
 
-# Ignore generated files
-/src/lib/generated
-/supabase/.temp
+# 🏗️ Build output
+/build
+/.svelte-kit
+/.vercel
+/.netlify
+/dist
+
+# 🔧 Config and environment
+.env
+.env.*          # in case you have .env.local, etc.
+
+# 📁 Dependency folders
+/node_modules
+
+# 🧬 Generated code (your existing rules)
+src/lib/generated
+supabase/.temp
+src/app.css
+
+# 🔍 Logs and reports
+*.log
+coverage
+
+# 📦 Static output (optional, if generated)
+public/uploads
+public/assets
+
+# 💅 Editor folders
+.vscode
+.idea

@@ -1,21 +1,4 @@
-<script lang="ts">
-	import { invalidateAll } from '$app/navigation';
+<h2>Welcome to the new SvelteKit manga site 👋</h2>
 
-	let { data } = $props();
-
-	let { session, supabase } = $derived(data);
-</script>
-
-<h1>Welcome to SvelteKit + Supabase</h1>
-<p>
-	<a href="protected">Navigate to a protected page</a>
-</p>
-<div>
-	{#if session != null}
-		<p>You are logged in as {session.user.email}</p>
-		<button onclick={() => supabase.auth.signOut()}>Sign out</button>
-	{:else}
-		<a href="auth">Sign In</a>
-	{/if}
-	<button onclick={() => invalidateAll()}>invalidateAll</button>
-</div>
+<p>This is the homepage. If you can see this, your project is running correctly!</p>
+<h1 class="text-4xl font-bold text-pink-500">Tailwind is working 💅</h1>

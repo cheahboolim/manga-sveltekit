@@ -1,8 +1,8 @@
-import eslint from '@eslint/js';
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
-import eslintPluginSvelte from 'eslint-plugin-svelte';
-import globals from 'globals';
-import tseslint from 'typescript-eslint';
+import eslint from '@eslint/js'
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
+import eslintPluginSvelte from 'eslint-plugin-svelte'
+import globals from 'globals'
+import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
 	{
@@ -56,4 +56,4 @@ export default tseslint.config(
 			}
 		}
 	}
-);
+)

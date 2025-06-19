@@ -1,15 +1,15 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import { Auth } from '@supabase/auth-ui-svelte';
-	import { ThemeSupa } from '@supabase/auth-ui-shared';
+	import { page } from '$app/stores'
+	import { Auth } from '@supabase/auth-ui-svelte'
+	import { ThemeSupa } from '@supabase/auth-ui-shared'
 
-	let next = $derived($page.url.searchParams.get('next'));
+	let next = $derived($page.url.searchParams.get('next'))
 
 	let redirectTo = $derived(
 		next
 			? `${$page.url.origin}/auth/callback?next=${encodeURIComponent(next)}`
 			: `${$page.url.origin}/auth/callback`
-	);
+	)
 </script>
 
 <svelte:head>
