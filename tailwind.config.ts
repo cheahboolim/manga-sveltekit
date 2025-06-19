@@ -1,13 +1,14 @@
-import type { Config } from 'tailwindcss';
-import animate from 'tailwindcss-animate';
+import type { Config } from 'tailwindcss'
+import animate from 'tailwindcss-animate'
 
 const config: Config = {
-	darkMode: 'class',
+	darkMode: ['class'],
 	content: [
 		'./src/**/*.{html,js,svelte,ts}',
 		'./components/**/*.{html,js,svelte,ts}',
 		'./app/**/*.{html,js,svelte,ts}'
 	],
+	prefix: '',
 	theme: {
 		container: {
 			center: true,
@@ -74,6 +75,6 @@ const config: Config = {
 		}
 	},
 	plugins: [animate]
-};
+}
 
-export default config;
+export default config

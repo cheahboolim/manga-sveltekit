@@ -1,7 +1,6 @@
-<script>
-	// no js needed
+<script lang="ts">
+	import LatestComics from '$lib/components/LatestComics.svelte'
+	export let data
 </script>
 
-<div class="min-h-screen flex items-center justify-center bg-gray-900 text-white">
-	<h1 class="text-3xl font-bold">If this is white text on dark gray, Tailwind works!</h1>
-</div>
+<LatestComics comics={data.comics} page={data.page} total={data.total} />
