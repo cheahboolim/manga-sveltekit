@@ -45,6 +45,8 @@
 	"dependencies": {
 		"@supabase/auth-ui-svelte": "^0.2.9",
 		"@supabase/ssr": "^0.5.1",
-		"@supabase/supabase-js": "^2.44.4"
+		"@supabase/supabase-js": "^2.44.4",
+		"lucide-svelte": "^0.518.0",
+		"tailwindcss-animate": "^1.0.7"
 	}
 }

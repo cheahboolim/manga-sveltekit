@@ -1,14 +1,17 @@
 <script>
-	import { onMount } from 'svelte'
-	import MainNav from '$lib/components/MainNav.svelte'
-	import Footer from '$lib/components/Footer.svelte'
-	import BannerAd from '$lib/components/adsterra/BannerAd.svelte'
-	import BlueBallsAd from '$lib/components/ownads/BlueBallsAd.svelte'
+	import '$app/environment'; // Optional, but can be useful
+	import '../app.css'; // ✅ This is the missing part
+	import { onMount } from 'svelte';
+	import MainNav from '$lib/components/MainNav.svelte';
+	import Footer from '$lib/components/Footer.svelte';
+	import BannerAd from '$lib/components/adsterra/BannerAd.svelte';
+	import BlueBallsAd from '$lib/components/ownads/BlueBallsAd.svelte';
 
 	onMount(() => {
-		// later: setup theme or auth if needed
-	})
+		// Future: theme or auth setup here if needed
+	});
 </script>
+
 
 <svelte:head>
 	<title>SusManga - Share Your Dreams</title>
@@ -44,7 +47,8 @@
 	/>
 </svelte:head>
 
-<div class="relative flex min-h-screen flex-col bg-background antialiased">
+<!-- Root wrapper with dark mode colors -->
+<div class="relative flex min-h-screen flex-col bg-background text-foreground antialiased">
 	<MainNav />
 
 	<!-- Top Banner Ad -->
