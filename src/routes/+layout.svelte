@@ -16,12 +16,32 @@
 	<meta name="theme-color" content="#000000" />
 	<meta name="msapplication-TileColor" content="#000000" />
 	<link rel="manifest" href="/manifest.json" />
-	<link rel="icon" type="image/png" sizes="16x16" href="https://cdn.susmanga.com/favicon/favicon-16x16.png" />
-	<link rel="icon" type="image/png" sizes="32x32" href="https://cdn.susmanga.com/favicon/favicon-32x32.png" />
+	<link
+		rel="icon"
+		type="image/png"
+		sizes="16x16"
+		href="https://cdn.susmanga.com/favicon/favicon-16x16.png"
+	/>
+	<link
+		rel="icon"
+		type="image/png"
+		sizes="32x32"
+		href="https://cdn.susmanga.com/favicon/favicon-32x32.png"
+	/>
 	<link rel="icon" href="https://cdn.susmanga.com/favicon/favicon.ico" sizes="any" />
 	<link rel="apple-touch-icon" href="https://cdn.susmanga.com/favicon/apple-touch-icon.png" />
-	<link rel="icon" type="image/png" sizes="192x192" href="https://cdn.susmanga.com/favicon/android-chrome-192x192.png" />
-	<link rel="icon" type="image/png" sizes="512x512" href="https://cdn.susmanga.com/favicon/android-chrome-512x512.png" />
+	<link
+		rel="icon"
+		type="image/png"
+		sizes="192x192"
+		href="https://cdn.susmanga.com/favicon/android-chrome-192x192.png"
+	/>
+	<link
+		rel="icon"
+		type="image/png"
+		sizes="512x512"
+		href="https://cdn.susmanga.com/favicon/android-chrome-512x512.png"
+	/>
 </svelte:head>
 
 <div class="relative flex min-h-screen flex-col bg-background antialiased">
