@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // src/routes/browse/[type]/[slug]/+page.server.ts
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';

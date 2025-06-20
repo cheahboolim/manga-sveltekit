@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { supabase } from '$lib/supabaseClient';
+	import { supabase } from '$lib/supabaseClient.ts';
 	import ComicGrid from './ComicGrid.svelte';
 
 	export let tagIds: number[] = [];

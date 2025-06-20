@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // src/routes/comic/[slug]/read/+page.server.ts
 import { error } from '@sveltejs/kit';
 import { supabase } from '$lib/supabaseClient';
