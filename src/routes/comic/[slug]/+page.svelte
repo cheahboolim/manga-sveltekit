@@ -18,7 +18,7 @@
 <main class="container mx-auto px-4 py-8">
 	<div class="max-w-4xl mx-auto space-y-8">
 		{#if comic.feature_image_url}
-			<a href={`/comic/${slug}/read`}>
+			<a href={`/comic/${slug}/read?page=1`}>
 				<img
 					src={comic.feature_image_url}
 					alt={comic.title}
@@ -53,7 +53,7 @@
 		</div>
 
 		<!-- 🔥 Bigger, bolder, shadowed Start Reading button -->
-		<a href={`/comic/${slug}/read`} class="block mt-6">
+		<a href={`/comic/${slug}/read?page=1`} class="block mt-6">
 			<button
 				class="bg-[#FF1493] hover:bg-[#e01382] text-white text-lg font-bold px-6 py-3 rounded-xl shadow-lg border border-transparent w-full sm:w-auto transition"
 			>
