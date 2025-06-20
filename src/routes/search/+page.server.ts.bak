@@ -1,0 +1,69 @@
+// src/routes/search/+page.server.ts
+import { createClient } from '$lib/utils/supabase/server.js'
+import { error } from '@sveltejs/kit'
+import type { PageServerLoad } from './$types'
+
+interface MangaWithSlug {
+	id: string
+	title: string
+	feature_image_url: string
+	slug_map: { slug: string }[]
+}
+
+export const load: PageServerLoad = async ({ url, locals }) => {
+	const query = url.searchParams.get('q')?.trim() || ''
+	const currentPage = Number(url.searchParams.get('page')) || 1
+	const pageSize = 20
+	const from = (currentPage - 1) * pageSize
+	const to = from + pageSize - 1
+
+	// Return early if no search query
+	if (!query) {
+		return {
+			query: '',
+			comics: [],
+			totalPages: 0,
+			currentPage: 1,
+			showEmpty: true
+		}
+	}
+
+	const supabase = await createClient()
+
+	try {
+		const {
+			data: manga,
+			error: searchError,
+			count
+		} = await supabase
+			.from('manga')
+			.select('id, title, feature_image_url, slug_map(slug)', { count: 'exact' })
+			.ilike('title', `%${query}%`)
+			.range(from, to)
+
+		if (searchError) {
+			throw error(500, 'Search failed')
+		}
+
+		const formatted = ((manga as MangaWithSlug[]) || []).map((item) => ({
+			id: item.id,
+			title: item.title,
+			slug: item.slug_map?.[0]?.slug ?? '',
+			featureImage: item.feature_image_url,
+			author: { name: 'Unknown' }
+		}))
+
+		const totalPages = count ? Math.ceil(count / pageSize) : 1
+
+		return {
+			query,
+			comics: formatted,
+			totalPages,
+			currentPage,
+			showEmpty: false,
+			resultsCount: count || 0
+		}
+	} catch (err) {
+		throw error(500, 'Unable to search comics')
+	}
+}

@@ -1,0 +1,80 @@
+<!-- src/routes/comic/[slug]/read/+page.svelte -->
+<script lang="ts">
+  import { goto } from '$app/navigation';
+
+  // the data shape returned by +page.server.ts
+  export let data: {
+    slug: string;
+    manga: { id: string; title: string; tagIds: number[] };
+    images: string[];
+    currentPage: number;
+    totalPages: number;
+  };
+
+  const { slug, manga, images, currentPage, totalPages } = data;
+
+  const IMAGES_PER_PAGE = images.length; // already paginated
+
+  function goToPage(n: number) {
+    if (n >= 1 && n <= totalPages) {
+      // always use an absolute path
+      goto(`/comic/${slug}/read?page=${n}`, { keepFocus: true });
+    }
+  }
+</script>
+
+<main class="container mx-auto px-4 py-8">
+  <div class="mb-6">
+    <a href={`/comic/${slug}`} class="text-pink-600 hover:underline">
+      ← Back to {manga.title}
+    </a>
+  </div>
+
+  <h1 class="text-3xl font-bold mb-6 text-center">{manga.title}</h1>
+
+  <!-- Pages -->
+  <div class="space-y-4 mb-8">
+    {#each images as url, idx}
+      <img
+        src={url}
+        alt={`Page ${(currentPage - 1) * IMAGES_PER_PAGE + idx + 1}`}
+        class="w-full rounded-lg shadow"
+        loading="lazy"
+      />
+    {/each}
+  </div>
+
+  <!-- Pagination -->
+  <div class="flex justify-center items-center space-x-2 mb-4">
+    {#if currentPage > 1}
+      <button
+        class="px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-700"
+        on:click={() => goToPage(currentPage - 1)}
+      >
+        Previous
+      </button>
+    {/if}
+
+    <!-- Numbered buttons -->
+    {#each Array(totalPages) as _, i}
+      <button
+        class="px-3 py-1 rounded border 
+               {i + 1 === currentPage
+                 ? 'bg-pink-600 text-white font-bold'
+                 : 'bg-white text-black hover:bg-gray-100'}"
+        on:click={() => goToPage(i + 1)}
+      >
+        {i + 1}
+      </button>
+    {/each}
+
+    {#if currentPage < totalPages}
+      <button
+        class="px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-700"
+        on:click={() => goToPage(currentPage + 1)}
+      >
+        Next
+      </button>
+    {/if}
+  </div>
+</main>
