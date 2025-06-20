@@ -1,1 +1,37 @@
-<div class="bg-yellow-200 text-black text-center p-2 rounded">BannerAd Placeholder</div>
+<script lang="ts">
+  import { onMount } from 'svelte';
+  let adContainer: HTMLDivElement;
+
+  onMount(() => {
+    const scriptConfig = document.createElement('script');
+    scriptConfig.type = 'text/javascript';
+    scriptConfig.innerHTML = `
+      atOptions = {
+        'key' : '10a74cde0d7fb9b8aadb4042bc6d9ce8',
+        'format' : 'iframe',
+        'height' : 250,
+        'width' : 300,
+        'params' : {}
+      };
+    `;
+
+    const scriptSrc = document.createElement('script');
+    scriptSrc.type = 'text/javascript';
+    scriptSrc.src = '//www.highperformanceformat.com/10a74cde0d7fb9b8aadb4042bc6d9ce8/invoke.js';
+    scriptSrc.async = true;
+
+    if (adContainer) {
+      adContainer.appendChild(scriptConfig);
+      adContainer.appendChild(scriptSrc);
+    }
+
+    return () => {
+      if (adContainer) adContainer.innerHTML = '';
+    };
+  });
+</script>
+
+<div
+  bind:this={adContainer}
+  class="adsterra-banner flex justify-center items-center w-full"
+></div>

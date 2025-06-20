@@ -24,19 +24,22 @@
 		<ComicGrid {comics} />
 
 		<div class="flex justify-center items-center gap-4 mt-8">
+			<!-- Previous Button -->
 			<button
 				on:click={() => goToPage(page - 1)}
-				class="bg-accent text-white px-4 py-2 rounded disabled:opacity-50"
+				class="px-4 py-2 bg-white text-black rounded border hover:bg-gray-200 disabled:opacity-50 font-semibold"
 				disabled={page === 1}
 			>
-				Previous
+				← Previous
 			</button>
+
+			<!-- Load More Button -->
 			<button
 				on:click={() => goToPage(page + 1)}
-				class="bg-accent text-white px-4 py-2 rounded disabled:opacity-50"
+				class="px-4 py-2 bg-pink-600 text-white rounded border hover:bg-gray-200 disabled:opacity-50 font-semibold"
 				disabled={page >= totalPages}
 			>
-				Next
+				LOAD MORE MANGA
 			</button>
 		</div>
 	{/if}
