@@ -10,25 +10,8 @@
     }[];
     page: number;
     totalPages: number;
-    meta: {
-      title: string;
-      description: string;
-      prev: string | null;
-      next: string | null;
-    };
   };
 </script>
-
-<svelte:head>
-  <title>{data.meta.title}</title>
-  <meta name="description" content={data.meta.description} />
-  {#if data.meta.prev}
-    <link rel="prev" href={data.meta.prev} />
-  {/if}
-  {#if data.meta.next}
-    <link rel="next" href={data.meta.next} />
-  {/if}
-</svelte:head>
 
 <main class="container mx-auto px-4 py-12">
   <h1 class="text-3xl font-bold mb-6">

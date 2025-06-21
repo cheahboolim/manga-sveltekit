@@ -12,16 +12,10 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 
 	if (!query) {
 		return {
-			query,
+			query: '',
 			comics: [],
 			page: 1,
-			totalPages: 1,
-			meta: {
-				title: 'Search | SusManga',
-				description: 'Search for manga on SusManga.',
-				prev: null,
-				next: null
-			}
+			totalPages: 1
 		};
 	}
 
@@ -46,21 +40,10 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 
 	const totalPages = count ? Math.ceil(count / PAGE_SIZE) : 1;
 
-	const meta = {
-		title:
-			page > 1
-				? `Search results for "${query}" – Page ${page} | SusManga`
-				: `Search results for "${query}" | SusManga`,
-		description: `Discover manga results for "${query}" on SusManga. Page ${page} of ${totalPages}.`,
-		prev: page > 1 ? `/search?q=${encodeURIComponent(query)}&page=${page - 1}` : null,
-		next: page < totalPages ? `/search?q=${encodeURIComponent(query)}&page=${page + 1}` : null
-	};
-
 	return {
 		query,
 		comics,
 		page,
-		totalPages,
-		meta
+		totalPages
 	};
 };
