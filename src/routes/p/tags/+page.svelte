@@ -1,42 +1,40 @@
 <script lang="ts">
-  import { page } from '$app/stores';
-  import { onMount } from 'svelte';
   import { writable, derived } from 'svelte/store';
+  import { seo } from '$lib/seo';
 
   export let data: {
-    grouped: Record<string, { id: number; name: string; slug: string | null }[]>;
+    grouped: Record<string, { id: string; name: string; slug: string }[]>;
   };
 
   const searchQuery = writable('');
-
   const filteredGrouped = derived([searchQuery], ([$searchQuery]) => {
     const query = $searchQuery.trim().toLowerCase();
     const result: typeof data.grouped = {};
 
     for (const key in data.grouped) {
-      const tags = data.grouped[key].filter(tag => tag.name.toLowerCase().includes(query));
-      if (tags.length > 0) {
-        result[key] = tags;
-      }
+      const matches = data.grouped[key].filter(item =>
+        item.name.toLowerCase().includes(query)
+      );
+      if (matches.length > 0) result[key] = matches;
     }
 
     return result;
   });
 
-  let scrollToSection = (id: string) => {
+  const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
+
+  // SEO
+  seo.set({
+    title: 'Browse Tags A-Z | SusManga',
+    description: 'Discover manga by tags like milf, yuri, mindbreak, and more. Filter by your favorite tags A to Z.',
+    canonical: 'https://susmanga.com/p/tags'
+  });
 </script>
 
-<style>
-  .sticky-nav {
-    position: sticky;
-    top: 1rem;
-    max-height: calc(100vh - 2rem);
-    overflow-y: auto;
-  }
-</style>
+<!-- same style and layout as characters -->
 
 <main class="max-w-6xl mx-auto px-4 py-8">
   <h1 class="text-3xl font-bold mb-4">Search Tags</h1>
@@ -55,8 +53,8 @@
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
             {#each tags as tag}
               <a
-                href={`/browse/tags/${tag.slug || tag.name.toLowerCase().replace(/\s+/g, '-')}`}
-                class="block p-2 border rounded bg-white text-black hover:bg-pink-500 hover:text-white transition dark:bg-black dark:text-white"
+                href={`/browse/tags/${tag.slug}`}
+                class="block p-2 border rounded hover:bg-pink-500 hover:text-white transition"
               >
                 {tag.name}
               </a>

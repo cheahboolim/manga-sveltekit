@@ -2,6 +2,7 @@
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
+  import SimilarManga from '$lib/components/SimilarManga.svelte';
 
   export let data: {
     slug: string;
@@ -98,19 +99,25 @@
   </div>
 
   <!-- Bottom navigation links -->
-<div class="flex flex-col items-center space-y-4 mt-10">
-  <a
-    href={`/comic/${slug}`}
-    class="px-4 py-2 bg-white text-black rounded hover:bg-gray-200"
-  >
-    Back to Gallery
-  </a>
-  <a
-    href="/"
-    class="px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-700"
-  >
-    Back to SUSMANGA.COM
-  </a>
-</div>
+  <div class="flex flex-col items-center space-y-4 mt-10">
+    <a
+      href={`/comic/${slug}`}
+      class="px-4 py-2 bg-white text-black rounded hover:bg-gray-200"
+    >
+      Back to Gallery
+    </a>
+    <a
+      href="/"
+      class="px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-700"
+    >
+      Back to SUSMANGA.COM
+    </a>
+  </div>
+
+  <!-- Similar Manga Widget -->
+  <SimilarManga 
+    tagIds={manga.tagIds} 
+    currentMangaId={manga.id} 
+  />
 
 </main>

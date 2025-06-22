@@ -8,7 +8,7 @@
 </script>
 
 <section class="px-4 mt-10">
-  <h2 class="text-xl font-bold text-foreground mb-4">You Might Also Like</h2>
+  <h2 class="text-xl font-bold text-foreground mb-4">Hot Right Now</h2>
   <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
     {#each comics as comic (comic.id)}
       <div

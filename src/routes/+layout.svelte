@@ -1,7 +1,9 @@
 <script>
-	import '$app/environment'; // Optional, but can be useful
-	import '../app.css'; // ✅ This is the missing part
+	import '$app/environment';
+	import '../app.css';
 	import { onMount } from 'svelte';
+	import { seo } from '$lib/seo';
+
 	import MainNav from '$lib/components/MainNav.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import BannerAd from '$lib/components/adsterra/BannerAd.svelte';
@@ -12,10 +14,12 @@
 	});
 </script>
 
-
 <svelte:head>
-	<title>SusManga - Share Your Dreams</title>
-	<meta name="description" content="SusManga.com - Share Your Dreams, Live Your Fantasy" />
+	<title>{$seo.title}</title>
+	<meta name="description" content={$seo.description} />
+	<link rel="canonical" href={$seo.canonical} />
+
+	<!-- Static icons and PWA meta -->
 	<meta name="theme-color" content="#000000" />
 	<meta name="msapplication-TileColor" content="#000000" />
 	<link rel="manifest" href="/manifest.json" />

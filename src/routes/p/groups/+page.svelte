@@ -7,6 +7,7 @@
   };
 
   const searchQuery = writable('');
+
   const filteredGrouped = derived([searchQuery], ([$searchQuery]) => {
     const query = $searchQuery.trim().toLowerCase();
     const result: typeof data.grouped = {};
@@ -28,9 +29,9 @@
 
   // SEO
   seo.set({
-    title: 'Browse Characters A-Z | SusManga',
-    description: 'Explore manga by character. Find your favorite waifus and husbandos in SusManga’s full character index.',
-    canonical: 'https://susmanga.com/p/characters'
+    title: 'Browse Groups A-Z | SusManga',
+    description: 'Find manga scanlation groups on SusManga, sorted A to Z.',
+    canonical: 'https://susmanga.com/p/groups'
   });
 </script>
 
@@ -44,26 +45,27 @@
 </style>
 
 <main class="max-w-6xl mx-auto px-4 py-8">
-  <h1 class="text-3xl font-bold mb-4">Search Characters</h1>
+  <h1 class="text-3xl font-bold mb-4">Search Groups</h1>
   <input
     type="text"
     bind:value={$searchQuery}
-    placeholder="Search characters..."
+    placeholder="Search groups..."
     class="w-full p-2 border rounded mb-6 bg-white text-black dark:bg-black dark:text-white"
   />
 
   <div class="flex flex-col md:flex-row gap-8">
+    <!-- Group List -->
     <div class="flex-1">
-      {#each Object.entries($filteredGrouped) as [letter, characters]}
+      {#each Object.entries($filteredGrouped) as [letter, groups]}
         <section id={letter} class="mb-8">
           <h2 class="text-xl font-bold mb-2">{letter}</h2>
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-            {#each characters as character}
+            {#each groups as group}
               <a
-                href={`/browse/characters/${character.slug}`}
+                href={`/browse/groups/${group.slug}`}
                 class="block p-2 border rounded hover:bg-pink-500 hover:text-white transition"
               >
-                {character.name}
+                {group.name}
               </a>
             {/each}
           </div>
@@ -71,6 +73,7 @@
       {/each}
     </div>
 
+    <!-- Sticky A-Z Scroll -->
     <div class="sticky-nav hidden md:block w-12">
       <nav class="flex flex-col items-center gap-2">
         {#each 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#'.split('') as char}

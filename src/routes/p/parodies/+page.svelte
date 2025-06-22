@@ -1,42 +1,40 @@
 <script lang="ts">
-  import { page } from '$app/stores';
-  import { onMount } from 'svelte';
   import { writable, derived } from 'svelte/store';
+  import { seo } from '$lib/seo';
 
   export let data: {
-    grouped: Record<string, { id: number; name: string; slug: string | null }[]>;
+    grouped: Record<string, { id: string; name: string; slug: string }[]>;
   };
 
   const searchQuery = writable('');
-
   const filteredGrouped = derived([searchQuery], ([$searchQuery]) => {
     const query = $searchQuery.trim().toLowerCase();
     const result: typeof data.grouped = {};
 
     for (const key in data.grouped) {
-      const matches = data.grouped[key].filter(tag => tag.name.toLowerCase().includes(query));
-      if (matches.length > 0) {
-        result[key] = matches;
-      }
+      const matches = data.grouped[key].filter(item =>
+        item.name.toLowerCase().includes(query)
+      );
+      if (matches.length > 0) result[key] = matches;
     }
 
     return result;
   });
 
-  let scrollToSection = (id: string) => {
+  const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
+
+  // SEO
+  seo.set({
+    title: 'Browse Parodies A-Z | SusManga',
+    description: 'Search manga by parody — anime, games, comics, and more. Naruto, Fate, One Piece, and others.',
+    canonical: 'https://susmanga.com/p/parodies'
+  });
 </script>
 
-<style>
-  .sticky-nav {
-    position: sticky;
-    top: 1rem;
-    max-height: calc(100vh - 2rem);
-    overflow-y: auto;
-  }
-</style>
+<!-- same layout and UI -->
 
 <main class="max-w-6xl mx-auto px-4 py-8">
   <h1 class="text-3xl font-bold mb-4">Search Parodies</h1>
@@ -49,16 +47,16 @@
 
   <div class="flex flex-col md:flex-row gap-8">
     <div class="flex-1">
-      {#each Object.entries($filteredGrouped) as [letter, entries]}
+      {#each Object.entries($filteredGrouped) as [letter, parodies]}
         <section id={letter} class="mb-8">
           <h2 class="text-xl font-bold mb-2">{letter}</h2>
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-            {#each entries as entry}
+            {#each parodies as parody}
               <a
-                href={`/browse/parodies/${entry.slug || entry.name.toLowerCase().replace(/\s+/g, '-')}`}
-                class="block p-2 border rounded bg-white dark:bg-black text-black dark:text-white hover:bg-pink-500 hover:text-white"
+                href={`/browse/parodies/${parody.slug}`}
+                class="block p-2 border rounded hover:bg-pink-500 hover:text-white transition"
               >
-                {entry.name}
+                {parody.name}
               </a>
             {/each}
           </div>
