@@ -1,11 +1,4 @@
-<button
-						type="submit"
-						class="absolute right-0.5 top-1/2 transform -translate-y-1/2 bg-[#FF1493] hover:bg-[#e01382] text-white p-2 rounded-full transition-colors"
-					>
-						<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-						</svg>
-					</button><script lang="ts">
+<script lang="ts">
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
