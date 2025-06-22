@@ -11,13 +11,13 @@
 
 	const navItems = [
 		{ title: 'Upload', href: '/p/upload', special: true },
-		{ title: 'Tags', href: '/p/tags', mobileTitle: 'Browse Tags' },
-		{ title: 'Parodies', href: '/p/parodies', mobileTitle: 'Browse Parodies' },
-		{ title: 'Characters', href: '/p/characters', mobileTitle: 'Browse Characters' },
-		{ title: 'Artists', href: '/p/artists', mobileTitle: 'Browse Artists' },
-		{ title: 'Groups', href: '/p/groups', mobileTitle: 'Browse Groups' },
-		{ title: 'Categories', href: '/p/categories', mobileTitle: 'Browse Categories' },
-		{ title: 'Languages', href: '/p/languages', mobileTitle: 'Browse Languages' }
+		{ title: 'Tags', href: '/p/tags', mobileTitle: 'Tags' },
+		{ title: 'Parodies', href: '/p/parodies', mobileTitle: 'Parodies' },
+		{ title: 'Characters', href: '/p/characters', mobileTitle: 'Characters' },
+		{ title: 'Artists', href: '/p/artists', mobileTitle: 'Artists' },
+		{ title: 'Groups', href: '/p/groups', mobileTitle: 'Groups' },
+		{ title: 'Categories', href: '/p/categories', mobileTitle: 'Categories' },
+		{ title: 'Languages', href: '/p/languages', mobileTitle: 'Languages' }
 	];
 
 	function handleSearch(event: Event) {
