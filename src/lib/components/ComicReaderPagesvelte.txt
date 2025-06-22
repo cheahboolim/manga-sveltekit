@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 	import Button from '$lib/components/ui/button.svelte';
 
 	export let slug: string;
@@ -21,7 +22,7 @@
 
 	function goToPage(pageIndex: number) {
 		const url = `/comic/${slug}/read?page=${pageIndex}`;
-		window.location.href = url;
+		goto(url, { keepFocus: true });
 	}
 </script>
 
