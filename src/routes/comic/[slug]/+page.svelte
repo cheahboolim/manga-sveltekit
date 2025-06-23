@@ -2,6 +2,8 @@
 	import ComicPreview from '$lib/components/ComicPreview.svelte';
 	import SimilarManga from '$lib/components/SimilarManga.svelte';
 	import MetaGroup from '$lib/components/MetaGroup.svelte';
+	import RandomPost from '$lib/components/RandomPost.svelte';
+	import TrafficStarsAd from '$lib/components/TrafficStarsAd.svelte';
 
 	export let data;
 	const { slug, comic } = data;
@@ -69,5 +71,10 @@
 		{/if}
 	</div>
 
+	<!-- Hot Now Widget -->
+	
+
 	<SimilarManga tagIds={comic.tags.map(tag => Number(tag.id))} currentMangaId={comic.id} />
+	<TrafficStarsAd />
+	<RandomPost comics={data.randomComics} />
 </main>

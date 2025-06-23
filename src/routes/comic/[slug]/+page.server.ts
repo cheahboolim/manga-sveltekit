@@ -66,6 +66,64 @@ export async function load({ params }) {
 		fetchRelated('manga_characters', 'character_id')
 	])
 
+	// Fetch 8 random comics for the "Hot Now" widget
+	const RANDOM_LIMIT = 8;
+	const randomSeed = Math.floor(Math.random() * 1000000);
+
+	// Try to use the RPC function for seeded random
+	const { data: randomManga, error: randomError } = await supabase
+		.rpc('get_random_manga', {
+			seed_value: randomSeed / 1000000,
+			limit_count: RANDOM_LIMIT,
+			offset_count: 0
+		});
+
+	// Fallback if RPC doesn't exist
+	let fallbackRandomManga;
+	if (randomError || !randomManga) {
+		console.log('RPC not available, falling back to simple random for hot widget');
+		const { data: fallback, error: fallbackError } = await supabase
+			.from('manga')
+			.select('id, title, feature_image_url')
+			.limit(RANDOM_LIMIT * 3); // Get more to shuffle from
+
+		if (fallbackError || !fallback) {
+			console.error('Error fetching random manga:', fallbackError);
+			fallbackRandomManga = [];
+		} else {
+			// Shuffle the results client-side
+			fallbackRandomManga = fallback
+				.map(item => ({ ...item, sort: Math.random() }))
+				.sort((a, b) => a.sort - b.sort)
+				.slice(0, RANDOM_LIMIT)
+				.map(({ sort, ...item }) => item);
+		}
+	}
+
+	const finalRandomManga = randomManga || fallbackRandomManga || [];
+
+	// Get slugs for the random manga
+	const randomMangaIds = finalRandomManga.map((m: any) => m.id);
+	let randomComics = [];
+	
+	if (randomMangaIds.length > 0) {
+		const { data: randomSlugs, error: randomSlugError } = await supabase
+			.from('slug_map')
+			.select('slug, manga_id')
+			.in('manga_id', randomMangaIds);
+
+		if (!randomSlugError && randomSlugs) {
+			// Combine random manga with slugs
+			randomComics = finalRandomManga.map((item: any) => ({
+				id: item.id,
+				title: item.title,
+				slug: randomSlugs.find((s) => s.manga_id === item.id)?.slug ?? '',
+				featureImage: item.feature_image_url,
+				author: { name: 'Unknown' }
+			}));
+		}
+	}
+
 	return {
 		slug,
 		comic: {
@@ -81,6 +139,7 @@ export async function load({ params }) {
 			languages,
 			parodies,
 			characters
-		}
+		},
+		randomComics
 	}
 }

@@ -4,6 +4,8 @@
   import { onMount } from 'svelte';
   import { seo } from '$lib/seo';
   import SimilarManga from '$lib/components/SimilarManga.svelte';
+  import RandomPost from '$lib/components/RandomPost.svelte';
+  import TrafficStarsAd from '$lib/components/TrafficStarsAd.svelte';
 
   export let data: {
     slug: string;
@@ -11,6 +13,7 @@
     images: string[];
     currentPage: number;
     totalPages: number;
+    randomComics: any[];
   };
 
   const { slug, manga, totalPages } = data;
@@ -152,4 +155,7 @@
     tagIds={manga.tagIds} 
     currentMangaId={manga.id} 
   />
+  <TrafficStarsAd />
+    <!-- Hot Now Widget -->
+  <RandomPost comics={data.randomComics} />
 </main>

@@ -2,6 +2,7 @@
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
+  import { seo } from '$lib/seo';
   import SimilarManga from '$lib/components/SimilarManga.svelte';
 
   export let data: {
@@ -15,7 +16,7 @@
   const { slug, manga, totalPages } = data;
   const IMAGES_PER_PAGE = data.images.length;
 
-  // Reactively track URL query param
+  // Track URL param
   let currentPage = data.currentPage;
   $: {
     const urlPage = Number($page.url.searchParams.get('page'));
@@ -24,13 +25,45 @@
     }
   }
 
-  // navigate and reload loader
+  // SEO Metadata
+  const title =
+    currentPage === 1
+      ? `${manga.title} - Read Online Free | SusManga`
+      : `${manga.title} - Page ${currentPage} | Read Online Free | SusManga`;
+
+  const description = `Read ${manga.title} online${
+    currentPage > 1 ? ` - page ${currentPage}` : ''
+  }. SusManga lets you enjoy high quality translated manga.`
+
+  const canonical = `https://susmanga.com/comic/${slug}/read${
+    currentPage > 1 ? `?page=${currentPage}` : ''
+  }`;
+
+  const prev =
+    currentPage > 1
+      ? `/comic/${slug}/read${currentPage - 1 === 1 ? '' : `?page=${currentPage - 1}`}`
+      : undefined;
+
+  const next =
+    currentPage < totalPages
+      ? `/comic/${slug}/read?page=${currentPage + 1}`
+      : undefined;
+
+  // Set metadata
+  seo.set({
+    title,
+    description,
+    canonical,
+    prev,
+    next
+  });
+
   function goToPage(n: number) {
     if (n >= 1 && n <= totalPages) {
       goto(`/comic/${slug}/read?page=${n}`, {
         replaceState: false,
         keepFocus: true,
-        invalidateAll: true,
+        invalidateAll: true
       });
     }
   }
@@ -119,5 +152,4 @@
     tagIds={manga.tagIds} 
     currentMangaId={manga.id} 
   />
-
 </main>

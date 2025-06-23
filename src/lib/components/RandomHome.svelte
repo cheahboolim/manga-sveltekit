@@ -22,7 +22,7 @@
 
 <div class="py-10 px-4 bg-background text-foreground min-h-screen">
 	<div class="text-center mb-6">
-		<h2 class="text-2xl font-bold mb-2">Others are Reading</h2>
+		<h2 class="text-2xl font-bold mb-2">Hot Right Now 🔥</h2>
 		<p class="text-foreground/70 text-sm">Popular picks from our community</p>
 	</div>
 

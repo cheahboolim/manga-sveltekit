@@ -1,5 +1,6 @@
 <script lang="ts">
 	import RandomComics from '$lib/components/RandomComics.svelte';
+	import TrafficStarsAd from '$lib/components/TrafficStarsAd.svelte';
 	export let data;
 </script>
 
@@ -17,4 +18,5 @@
 
 <main class="max-w-6xl mx-auto px-4 py-8">
 	<RandomComics comics={data.comics} page={data.page} total={data.total} seed={data.seed} />
+	<TrafficStarsAd />
 </main>
