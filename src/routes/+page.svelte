@@ -1,5 +1,5 @@
 <script lang="ts">
-	import LatestComics from '$lib/components/LatestComics.svelte';
+	import RandomHome from '$lib/components/RandomHome.svelte';
 	export let data;
 </script>
 
@@ -12,8 +12,21 @@
 	{#if data.meta.next}
 		<link rel="next" href={data.meta.next} />
 	{/if}
+	<!-- Homepage should be indexed -->
+	<meta name="robots" content="index, follow" />
+	
+	<!-- Open Graph tags for social sharing -->
+	<meta property="og:title" content={data.meta.title} />
+	<meta property="og:description" content={data.meta.description} />
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="SusManga" />
+	
+	<!-- Twitter Card -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content={data.meta.title} />
+	<meta name="twitter:description" content={data.meta.description} />
 </svelte:head>
 
 <main class="max-w-6xl mx-auto px-4 py-8">
-	<LatestComics comics={data.comics} page={data.page} total={data.total} />
+	<RandomHome comics={data.comics} page={data.page} total={data.total} seed={data.seed} />
 </main>

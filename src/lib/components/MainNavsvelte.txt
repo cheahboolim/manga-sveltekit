@@ -11,9 +11,13 @@
 
 	const navItems = [
 		{ title: 'Upload', href: '/p/upload', special: true },
-		{ title: 'Tags', href: '/p/tags', mobileTitle: 'Browse Tags' },
-		{ title: 'Parodies', href: '/p/parodies', mobileTitle: 'Browse Parodies' },
-		{ title: 'Characters', href: '/p/characters', mobileTitle: 'Browse Characters' }
+		{ title: 'Tags', href: '/p/tags', mobileTitle: 'Tags' },
+		{ title: 'Parodies', href: '/p/parodies', mobileTitle: 'Parodies' },
+		{ title: 'Characters', href: '/p/characters', mobileTitle: 'Characters' },
+		{ title: 'Artists', href: '/p/artists', mobileTitle: 'Artists' },
+		{ title: 'Groups', href: '/p/groups', mobileTitle: 'Groups' },
+		{ title: 'Categories', href: '/p/categories', mobileTitle: 'Categories' },
+		{ title: 'Languages', href: '/p/languages', mobileTitle: 'Languages' }
 	];
 
 	function handleSearch(event: Event) {
@@ -48,10 +52,8 @@
 		{#if isMobile}
 			<!-- ✅ MOBILE -->
 			<div class="flex w-full items-center justify-between gap-2">
-				<!-- Logo -->
 				<a href="/" class="w-[10%] min-w-[40px] flex justify-start font-bold text-xl text-foreground">SM</a>
 
-				<!-- Search -->
 				<form on:submit={handleSearch} class="w-[80%] flex justify-center relative">
 					<input
 						type="search"
@@ -64,18 +66,13 @@
 						class="absolute right-0.5 top-1/2 transform -translate-y-1/2 bg-[#343434] hover:bg-[#2a2a2a] text-white p-2 rounded-full transition-colors"
 					>
 						<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
 						</svg>
 					</button>
 				</form>
 
-				<!-- Hamburger -->
 				<div class="w-[10%] flex justify-end">
-					<button
-						type="button"
-						class="text-foreground"
-						on:click={() => mobileMenuOpen.update((v) => !v)}
-					>
+					<button type="button" class="text-foreground" on:click={() => mobileMenuOpen.update(v => !v)}>
 						<Menu class="h-5 w-5" />
 					</button>
 				</div>
@@ -83,10 +80,8 @@
 		{:else}
 			<!-- ✅ DESKTOP -->
 			<div class="flex w-full items-center justify-between">
-				<!-- Logo -->
 				<a href="/" class="font-bold text-xl text-foreground">SUSMANGA.COM</a>
 
-				<!-- Search -->
 				<form on:submit={handleSearch} class="mx-4 flex-1 max-w-lg flex justify-center relative">
 					<input
 						type="search"
@@ -99,12 +94,11 @@
 						class="absolute right-0.5 top-1/2 transform -translate-y-1/2 bg-[#343434] hover:bg-[#e01382] text-white p-2 rounded-full transition-colors"
 					>
 						<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
 						</svg>
 					</button>
 				</form>
 
-				<!-- Nav Buttons -->
 				<div class="flex items-center space-x-2">
 					{#each navItems as item}
 						<a href={item.href}>
@@ -125,60 +119,49 @@
 	</div>
 </header>
 
-<!-- Mobile Menu Portal - Moved Outside Header -->
+<!-- ✅ MOBILE MENU -->
 {#if isMobile && $mobileMenuOpen}
-	<!-- Background Overlay -->
 	<div class="fixed inset-0 z-[99999] bg-black/50" on:click={() => mobileMenuOpen.set(false)}></div>
-	
-	<!-- ✅ MOBILE DRAWER - Slides from right, 80% width -->
-	<div class="fixed top-0 right-0 bottom-0 w-[80%] z-[99999] bg-black/95 backdrop-blur-md transform transition-transform duration-300 ease-in-out" style="position: fixed !important;">
-		<!-- Content Container -->
+
+	<div class="fixed top-0 right-0 bottom-0 w-[80%] z-[99999] bg-black/95 backdrop-blur-md">
 		<div class="flex flex-col h-full p-6 overflow-y-auto">
-			<!-- Close Button -->
+			<!-- Close -->
 			<div class="flex justify-end mb-8 pt-2">
-				<button 
-					on:click={() => mobileMenuOpen.set(false)} 
-					class="text-white hover:text-white/80 p-2 -m-2"
-					aria-label="Close menu"
-				>
+				<button on:click={() => mobileMenuOpen.set(false)} class="text-white hover:text-white/80 p-2 -m-2">
 					<X class="h-6 w-6" />
 				</button>
 			</div>
 
-			<!-- Upload Button -->
+			<!-- Upload -->
 			<div class="mb-8">
-				<a
-					href="/p/upload"
-					class="block"
-					on:click={() => mobileMenuOpen.set(false)}
-				>
+				<a href="/p/upload" class="block" on:click={() => mobileMenuOpen.set(false)}>
 					<div class="bg-[#FF1493] hover:bg-[#e01382] text-white px-4 py-3 rounded-lg text-center transition-colors text-lg font-medium">
 						Upload
 					</div>
 				</a>
 			</div>
 
-			<!-- Search Form in Mobile Menu -->
+			<!-- Search -->
 			<div class="mb-8">
 				<form on:submit={handleSearch} class="w-full relative">
 					<input
 						type="search"
 						bind:value={search}
 						placeholder="Search SusManga.com"
-						class="w-full rounded-full text-base placeholder:text-gray-400 bg-[#343434] text-white px-5 py-3 pr-14 border border-white focus:border-[#FFffff] focus:outline-none"
+						class="w-full rounded-full text-base placeholder:text-gray-400 bg-[#343434] text-white px-5 py-3 pr-14 border border-white"
 					/>
 					<button
 						type="submit"
-						class="absolute right-0.5 top-1/2 transform -translate-y-1/2 bg-[#343434] hover:bg-[#e01382] text-white p-2.5 rounded-full transition-colors"
+						class="absolute right-0.5 top-1/2 transform -translate-y-1/2 bg-[#343434] hover:bg-[#e01382] text-white p-2.5 rounded-full"
 					>
 						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
 						</svg>
 					</button>
 				</form>
 			</div>
 
-			<!-- Navigation -->
+			<!-- Nav Links -->
 			<nav class="flex-1 grid gap-3 text-lg font-medium">
 				{#each navItems.slice(1) as item}
 					<a

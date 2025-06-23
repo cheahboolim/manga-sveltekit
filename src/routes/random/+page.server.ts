@@ -32,6 +32,7 @@ export const load: PageServerLoad = async ({ url }) => {
 	}
 
 	// Use seeded random with PostgreSQL
+	// Note: This uses PostgreSQL's setseed() function for consistent random ordering
 	const { data: manga, error: mangaError } = await supabase
 		.rpc('get_random_manga', {
 			seed_value: seed / 1000000, // PostgreSQL setseed expects value between 0 and 1
@@ -94,13 +95,13 @@ export const load: PageServerLoad = async ({ url }) => {
 		seed, // Include seed for consistent pagination
 		meta: {
 			title: isFirstPage
-				? 'SusManga | Read Hentai, Doujinshi, and Latest Manga - Community Favorites'
-				: `Popular Manga | Page ${page} | SusManga `,
+				? 'Random Manga | Discover New Comics | SusManga'
+				: `Random Manga | Page ${page} | SusManga`,
 			description: isFirstPage
-				? 'Discover popular manga, hentai, and doujinshi that others are reading on SusManga. Find trending adult comics and community favorites!'
-				: `Browse page ${page} of popular manga selections. Discover trending adult comics, hentai and doujinshi. Nhentai Alternative | Rule 34 Alternative`,
-			prev: page > 1 ? `/?page=${page - 1}&seed=${seed}` : null,
-			next: page < totalPages ? `/?page=${page + 1}&seed=${seed}` : null
+				? 'Discover random manga and doujinshi on SusManga. Find new comics you might have missed!'
+				: `Browse page ${page} of random manga selections. Discover new adult comics randomly.`,
+			prev: page > 1 ? `/random?page=${page - 1}&seed=${seed}` : null,
+			next: page < totalPages ? `/random?page=${page + 1}&seed=${seed}` : null
 		}
 	};
 };
