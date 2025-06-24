@@ -17,6 +17,7 @@
       next: string | null;
     };
   };
+  import TrafficStarsAd from '$lib/components/TrafficStarsAd.svelte';
 </script>
 
 <svelte:head>
@@ -68,4 +69,5 @@
       {/each}
     </div>
   {/if}
+  <TrafficStarsAd />
 </main>

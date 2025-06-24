@@ -13,6 +13,7 @@
     page: number;
     totalPages: number;
   };
+  import TrafficStarsAd from '$lib/components/TrafficStarsAd.svelte';
 </script>
 
 <main class="container mx-auto px-4 py-12">
@@ -61,4 +62,5 @@
       {/if}
     </div>
   {/if}
+  <TrafficStarsAd />
 </main>
