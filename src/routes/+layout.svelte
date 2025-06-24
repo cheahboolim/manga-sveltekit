@@ -2,15 +2,26 @@
 	import '$app/environment';
 	import '../app.css';
 	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
+	import { afterNavigate } from '$app/navigation';
 	import { seo } from '$lib/seo';
+	import { trackPageView } from '$lib/gtm.js';
 
 	import MainNav from '$lib/components/MainNav.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import BannerAd from '$lib/components/adsterra/BannerAd.svelte';
 	import BlueBallsAd from '$lib/components/ownads/BlueBallsAd.svelte';
 
+	import TSVideoInstantAd from '$lib/components/TSVideoInstantAd.svelte';
+	import InterstitialAd from '$lib/components/InterstitialAd.svelte';
+
 	onMount(() => {
 		// Future: theme or auth setup here if needed
+	});
+
+	// Track page views on navigation
+	afterNavigate(() => {
+		trackPageView($page.url, $seo.title);
 	});
 </script>
 
@@ -70,4 +81,6 @@
 	</div>
 
 	<Footer />
+	<TSVideoInstantAd />
+	<InterstitialAd />
 </div>
