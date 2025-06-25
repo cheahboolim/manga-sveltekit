@@ -13,7 +13,8 @@
 	import BlueBallsAd from '$lib/components/ownads/BlueBallsAd.svelte';
 
 	import TSVideoInstantAd from '$lib/components/TSVideoInstantAd.svelte';
-	import InterstitialAd from '$lib/components/InterstitialAd.svelte';
+
+	//import AppInstallBanner from '$lib/components/AppInstallBanner.svelte';
 
 	onMount(() => {
 		// Future: theme or auth setup here if needed
@@ -33,7 +34,7 @@
 	<!-- Static icons and PWA meta -->
 	<meta name="theme-color" content="#000000" />
 	<meta name="msapplication-TileColor" content="#000000" />
-	<link rel="manifest" href="/manifest.json" />
+	<link rel="manifest" href="/manifest.webmanifest" />
 	<link
 		rel="icon"
 		type="image/png"
@@ -80,7 +81,11 @@
 		<BlueBallsAd />
 	</div>
 
+	<!-- PWA Install Banner 
+	<div class="container mx-auto px-4 py-2">
+		<AppInstallBanner />
+	</div>
+-->
 	<Footer />
 	<TSVideoInstantAd />
-	<InterstitialAd />
 </div>

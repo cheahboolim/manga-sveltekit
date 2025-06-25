@@ -37,10 +37,29 @@
 			}, 150);
 		};
 
+		// Listen for keyboard arrow keys
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if (isNavigating || isScrolling) return;
+			
+			if (event.key === 'ArrowLeft') {
+				event.preventDefault();
+				if (currentPage > 0) {
+					goToPage(currentPage - 1);
+				}
+			} else if (event.key === 'ArrowRight') {
+				event.preventDefault();
+				if ((currentPage + 1) * pageCount < totalPages) {
+					goToPage(currentPage + 1);
+				}
+			}
+		};
+
 		window.addEventListener('scroll', handleScroll);
+		window.addEventListener('keydown', handleKeyDown);
 		
 		return () => {
 			window.removeEventListener('scroll', handleScroll);
+			window.removeEventListener('keydown', handleKeyDown);
 			clearTimeout(scrollTimeout);
 		};
 	});
@@ -51,7 +70,7 @@
 		goto(url);
 	}
 
-	function handleImageTap(event: MouseEvent | KeyboardEvent) {
+	function handleImageTap(event: MouseEvent | TouchEvent | KeyboardEvent) {
 		// Handle keyboard events
 		if (event instanceof KeyboardEvent) {
 			if (event.key !== 'Enter' && event.key !== ' ') return;
@@ -69,19 +88,24 @@
 		// For keyboard events, treat as middle click
 		if (event instanceof KeyboardEvent) {
 			clickX = rect.width * 0.5;
+		} else if (event instanceof TouchEvent) {
+			// Handle touch events for mobile
+			const touch = event.touches[0] || event.changedTouches[0];
+			clickX = touch.clientX - rect.left;
 		} else {
+			// Handle mouse events
 			clickX = event.clientX - rect.left;
 		}
 		
 		const imageWidth = rect.width;
 		
-		// Left third for previous, right third for next, middle third does nothing
-		if (clickX < imageWidth * 0.33) {
+		// Left half for previous, right half for next
+		if (clickX < imageWidth * 0.5) {
 			// Left side - go to previous page
 			if (currentPage > 0) {
 				goToPage(currentPage - 1);
 			}
-		} else if (clickX > imageWidth * 0.67) {
+		} else {
 			// Right side - go to next page
 			if ((currentPage + 1) * pageCount < totalPages) {
 				goToPage(currentPage + 1);
@@ -128,12 +152,12 @@
 					type="button"
 					class="w-full block p-0 border-0 bg-transparent cursor-pointer"
 					on:click={handleImageTap}
+					on:touchend={handleImageTap}
 					on:keydown={handleImageTap}
 				>
 					<img
 						src={img}
 						alt={`Page ${currentPage * pageCount + index + 1}`}
-						loading="lazy"
 						class="w-full rounded-lg shadow select-none"
 						draggable="false"
 					/>
@@ -143,7 +167,7 @@
 				<div class="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200">
 					<!-- Left tap area -->
 					{#if currentPage > 0}
-						<div class="absolute left-0 top-0 w-1/3 h-full bg-black bg-opacity-10 flex items-center justify-start pl-4">
+						<div class="absolute left-0 top-0 w-1/2 h-full bg-black bg-opacity-10 flex items-center justify-start pl-4">
 							<div class="bg-black bg-opacity-50 text-white p-2 rounded-full">
 								<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
@@ -154,7 +178,7 @@
 					
 					<!-- Right tap area -->
 					{#if (currentPage + 1) * pageCount < totalPages}
-						<div class="absolute right-0 top-0 w-1/3 h-full bg-black bg-opacity-10 flex items-center justify-end pr-4">
+						<div class="absolute right-0 top-0 w-1/2 h-full bg-black bg-opacity-10 flex items-center justify-end pr-4">
 							<div class="bg-black bg-opacity-50 text-white p-2 rounded-full">
 								<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -166,6 +190,18 @@
 			</div>
 		{/each}
 	</div>
+
+	<!-- Navigation description after the 3rd image -->
+	{#if images.length >= 3}
+		<div class="text-center text-gray-600 text-sm mt-4 p-3 bg-gray-50 rounded-lg">
+			<div class="flex items-center justify-center gap-2">
+				<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+				</svg>
+				<span>Tap or use arrow keys to navigate. Right: next page, Left: previous page</span>
+			</div>
+		</div>
+	{/if}
 
 	<div class="flex justify-between mt-4">
 		{#if currentPage > 0}
