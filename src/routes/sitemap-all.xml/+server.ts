@@ -1,19 +1,43 @@
 /* eslint-disable prettier/prettier */
 // src/routes/sitemap-all.xml/+server.ts
 import { error } from '@sveltejs/kit';
+import { createClient } from '@supabase/supabase-js';
+import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
 
 export const GET = async () => {
 	try {
 		const base = 'https://susmanga.com';
 
-		// How many paginated manga sitemaps you want — adjust if you scale
-		const TOTAL_MANGA_PAGES = 100; // Change as needed
+		// Validate environment variables
+		if (!PUBLIC_SUPABASE_URL || !PUBLIC_SUPABASE_ANON_KEY) {
+			console.error('Missing Supabase environment variables');
+			throw error(500, 'Database configuration error');
+		}
+
+		// Create Supabase client
+		const supabase = createClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
+
+		// Get total count of manga records
+		const { count, error: countError } = await supabase
+			.from('manga')
+			.select('*', { count: 'exact', head: true });
+
+		if (countError) {
+			console.error('Error counting manga:', countError);
+			throw error(500, 'Failed to count manga records');
+		}
+
+		// Calculate how many sitemap pages we actually need
+		const PAGE_SIZE = 50000; // Same as your sitemap-manga endpoint
+		const totalMangaPages = Math.max(1, Math.ceil((count || 0) / PAGE_SIZE));
+
+		console.log(`Total manga records: ${count}, Pages needed: ${totalMangaPages}`);
 
 		// Get current date for lastmod
 		const lastmod = new Date().toISOString();
 
-		// Generate manga sitemaps
-		const mangaSitemaps = Array.from({ length: TOTAL_MANGA_PAGES }, (_, i) => {
+		// Generate only the sitemap pages we actually need
+		const mangaSitemaps = Array.from({ length: totalMangaPages }, (_, i) => {
 			const page = i + 1;
 			return `	<sitemap>
 		<loc>${base}/sitemap-manga/${page}.xml</loc>
@@ -51,8 +75,14 @@ ${staticSitemapXml}
 				'Cache-Control': 'public, max-age=3600' // Cache for 1 hour
 			}
 		});
-	} catch (err) {
+	} catch (err: unknown) {
 		console.error('Error generating sitemap-all:', err);
+		
+		// Re-throw SvelteKit errors
+		if (err && typeof err === 'object' && 'status' in err) {
+			throw err;
+		}
+		
 		throw error(500, 'Failed to generate sitemap');
 	}
 };
