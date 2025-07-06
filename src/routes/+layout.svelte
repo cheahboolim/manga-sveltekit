@@ -14,7 +14,7 @@
 
 	import TSVideoInstantAd from '$lib/components/TSVideoInstantAd.svelte';
 
-	//import AppInstallBanner from '$lib/components/AppInstallBanner.svelte';
+	import AppInstallBanner from '$lib/components/AppInstallBanner.svelte';
 
 	onMount(() => {
 		// Future: theme or auth setup here if needed
@@ -27,11 +27,7 @@
 </script>
 
 <svelte:head>
-	<title>{$seo.title}</title>
-	<meta name="description" content={$seo.description} />
-	<link rel="canonical" href={$seo.canonical} />
-
-	<!-- Static icons and PWA meta -->
+	<!-- Only static meta tags that don't change per page -->
 	<meta name="theme-color" content="#000000" />
 	<meta name="msapplication-TileColor" content="#000000" />
 	<link rel="manifest" href="/manifest.webmanifest" />
@@ -81,11 +77,9 @@
 		<BlueBallsAd />
 	</div>
 
-	<!-- PWA Install Banner 
-	<div class="container mx-auto px-4 py-2">
-		<AppInstallBanner />
-	</div>
--->
+<div class="container mx-auto px-4 py-2">
+    <AppInstallBanner />
+</div>
 	<Footer />
 	<TSVideoInstantAd />
 </div>

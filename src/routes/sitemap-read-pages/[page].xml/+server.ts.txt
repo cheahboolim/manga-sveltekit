@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // src/routes/sitemap-read-pages/[page].xml/+server.ts
 import { error } from '@sveltejs/kit';
 import { createClient } from '@supabase/supabase-js';

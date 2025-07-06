@@ -6,7 +6,7 @@ import { supabase } from '$lib/supabaseClient';
 export async function load({ params, url: _url }) {
   const slug = params.slug;
 
-  // 1) Look up manga_id via slug_map
+  // 1) Look up manga_id via slug
   const { data: slugRow, error: slugErr } = await supabase
     .from('slug_map')
     .select('manga_id')
@@ -30,7 +30,7 @@ export async function load({ params, url: _url }) {
     .select('tag_id')
     .eq('manga_id', mangaId);
   if (tagErr) throw error(500, 'Failed to load tags');
-  const tagIds = tagRows!.map((r) => r.tag_id);
+  const tagIds = (tagRows || []).map((r) => r.tag_id);
 
   // 4) Pagination parameters
   const pageNum = Number(_url.searchParams.get('page') ?? '1');
@@ -76,17 +76,17 @@ export async function load({ params, url: _url }) {
     } else {
       // Shuffle the results client-side
       fallbackRandomManga = fallback
-        .map(item => ({ ...item, sort: Math.random() }))
-        .sort((a, b) => a.sort - b.sort)
+        .map(item => ({ ...item, _sort: Math.random() }))
+        .sort((a, b) => a._sort - b._sort)
         .slice(0, RANDOM_LIMIT)
-        .map(({ sort, ...item }) => item);
+        .map(({ _sort, ...item }) => item);
     }
   }
 
   const finalRandomManga = randomManga || fallbackRandomManga || [];
 
   // Get slugs for the random manga
-  const randomMangaIds = finalRandomManga.map((m: any) => m.id);
+  const randomMangaIds = finalRandomManga.map((m: { id: string }) => m.id);
   let randomComics = [];
   
   if (randomMangaIds.length > 0) {
@@ -97,15 +97,36 @@ export async function load({ params, url: _url }) {
 
     if (!randomSlugError && randomSlugs) {
       // Combine random manga with slugs
-      randomComics = finalRandomManga.map((item: any) => ({
+      randomComics = finalRandomManga.map((item: { id: string; title: string; feature_image_url: string }) => ({
         id: item.id,
         title: item.title,
         slug: randomSlugs.find((s) => s.manga_id === item.id)?.slug ?? '',
         featureImage: item.feature_image_url,
-        author: { name: 'Unknown' }
+        author: { name: 'Sus Manga Hentai' }
       }));
     }
   }
+
+  // 7) Generate SEO metadata on server-side
+  const seoTitle = pageNum === 1
+    ? `${manga.title} - Read Online Free | SusManga`
+    : `${manga.title} - Page ${pageNum} | Read Online Free | SusManga`;
+
+  const seoDescription = `Read ${manga.title} online${
+    pageNum > 1 ? ` - page ${pageNum}` : ''
+  }. SusManga lets you enjoy high quality translated manga.`;
+
+  const canonical = `https://susmanga.com/comic/${slug}/read${
+    pageNum > 1 ? `?page=${pageNum}` : ''
+  }`;
+
+  const prev = pageNum > 1
+    ? `/comic/${slug}/read${pageNum - 1 === 1 ? '' : `?page=${pageNum - 1}`}`
+    : undefined;
+
+  const next = pageNum < totalPages
+    ? `/comic/${slug}/read?page=${pageNum + 1}`
+    : undefined;
 
   return {
     slug,
@@ -117,6 +138,14 @@ export async function load({ params, url: _url }) {
     images: pages.map((p) => p.image_url),
     currentPage: pageNum,
     totalPages,
-    randomComics
+    randomComics,
+    // SEO metadata for server-side rendering
+    seo: {
+      title: seoTitle,
+      description: seoDescription,
+      canonical,
+      prev,
+      next
+    }
   };
 }

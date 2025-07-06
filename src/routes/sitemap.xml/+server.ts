@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // src/routes/sitemap.xml/+server.ts
 import { error } from '@sveltejs/kit';
 
