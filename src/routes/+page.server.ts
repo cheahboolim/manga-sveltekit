@@ -1,5 +1,26 @@
+/* eslint-disable prettier/prettier */
 import type { PageServerLoad } from './$types';
 import { supabase } from '$lib/supabaseClient';
+
+// Define types for better TypeScript support
+interface MangaItem {
+	id: number;
+	title: string;
+	feature_image_url: string;
+}
+
+interface SlugItem {
+	slug: string;
+	manga_id: number;
+}
+
+interface ComicItem {
+	id: number;
+	title: string;
+	slug: string;
+	featureImage: string;
+	author: { name: string };
+}
 
 export const load: PageServerLoad = async ({ url }) => {
 	const PAGE_SIZE = 20;
@@ -40,7 +61,7 @@ export const load: PageServerLoad = async ({ url }) => {
 		});
 
 	// Fallback if RPC doesn't exist - use simple random (less consistent across pages)
-	let fallbackManga;
+	let fallbackManga: MangaItem[] = [];
 	if (mangaError || !manga) {
 		console.log('RPC not available, falling back to simple random');
 		const { data: fallback, error: fallbackError } = await supabase
@@ -55,15 +76,15 @@ export const load: PageServerLoad = async ({ url }) => {
 
 		// Shuffle the results client-side (less ideal but works)
 		fallbackManga = fallback
-			.map(item => ({ ...item, sort: Math.random() }))
-			.sort((a, b) => a.sort - b.sort)
-			.map(({ sort, ...item }) => item);
+			.map(item => ({ ...item, _sortKey: Math.random() }))
+			.sort((a, b) => a._sortKey - b._sortKey)
+			.map(({ _sortKey, ...item }) => item);
 	}
 
-	const finalManga = manga || fallbackManga;
+	const finalManga: MangaItem[] = manga || fallbackManga;
 
 	// Get slugs for the manga
-	const mangaIds = finalManga.map((m: any) => m.id);
+	const mangaIds = finalManga.map((m: MangaItem) => m.id);
 	const { data: slugs, error: slugError } = await supabase
 		.from('slug_map')
 		.select('slug, manga_id')
@@ -75,10 +96,10 @@ export const load: PageServerLoad = async ({ url }) => {
 	}
 
 	// Combine manga with slugs
-	const comics = finalManga.map((item: any) => ({
+	const comics: ComicItem[] = finalManga.map((item: MangaItem) => ({
 		id: item.id,
 		title: item.title,
-		slug: slugs.find((s) => s.manga_id === item.id)?.slug ?? '',
+		slug: (slugs as SlugItem[]).find((s) => s.manga_id === item.id)?.slug ?? '',
 		featureImage: item.feature_image_url,
 		author: { name: 'Unknown' }
 	}));
@@ -94,7 +115,7 @@ export const load: PageServerLoad = async ({ url }) => {
 		seed, // Include seed for consistent pagination
 		meta: {
 			title: isFirstPage
-				? 'SusManga | Read Hentai, Doujinshi, and Latest Manga - Community Favorites'
+				? 'SusManga | Read Hentai, Doujinshi, and Latest Manga'
 				: `Popular Manga | Page ${page} | SusManga `,
 			description: isFirstPage
 				? 'Discover popular manga, hentai, and doujinshi that others are reading on SusManga. Find trending adult comics and community favorites!'
@@ -102,5 +123,5 @@ export const load: PageServerLoad = async ({ url }) => {
 			prev: page > 1 ? `/?page=${page - 1}&seed=${seed}` : null,
 			next: page < totalPages ? `/?page=${page + 1}&seed=${seed}` : null
 		}
-	};
+	} as const;
 };

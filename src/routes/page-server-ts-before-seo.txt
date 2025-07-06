@@ -1,8 +1,107 @@
-<script lang="ts">
-	import LatestComics from '$lib/components/LatestComics.svelte';
-	export let data;
-</script>
+/* eslint-disable prettier/prettier */
+import type { PageServerLoad } from './$types';
+import { supabase } from '$lib/supabaseClient';
 
-<main class="max-w-6xl mx-auto px-4 py-8">
-	<LatestComics comics={data.comics} page={data.page} total={data.total} />
-</main>
+export const load: PageServerLoad = async ({ url }) => {
+	const PAGE_SIZE = 20;
+
+	const pageParam = parseInt(url.searchParams.get('page') ?? '1', 10);
+	const page = Math.max(1, isNaN(pageParam) ? 1 : pageParam);
+	const refreshParam = url.searchParams.get('refresh');
+	const seedParam = url.searchParams.get('seed');
+
+	// Generate a seed for consistent pagination within the same random set
+	// If refresh=true or no seed, generate new seed
+	let seed: number;
+	if (refreshParam === 'true' || !seedParam) {
+		seed = Math.floor(Math.random() * 1000000);
+	} else {
+		seed = parseInt(seedParam, 10) || Math.floor(Math.random() * 1000000);
+	}
+
+	const from = (page - 1) * PAGE_SIZE;
+	const to = from + PAGE_SIZE - 1;
+
+	// First, get the total count for pagination
+	const { count: totalCount, error: countError } = await supabase
+		.from('manga')
+		.select('*', { count: 'exact', head: true });
+
+	if (countError) {
+		console.error('Error getting manga count:', countError);
+		throw new Error('Failed to load manga count');
+	}
+
+	// Use seeded random with PostgreSQL
+	const { data: manga, error: mangaError } = await supabase
+		.rpc('get_random_manga', {
+			seed_value: seed / 1000000, // PostgreSQL setseed expects value between 0 and 1
+			limit_count: PAGE_SIZE,
+			offset_count: from
+		});
+
+	// Fallback if RPC doesn't exist - use simple random (less consistent across pages)
+	let fallbackManga;
+	if (mangaError || !manga) {
+		console.log('RPC not available, falling back to simple random');
+		const { data: fallback, error: fallbackError } = await supabase
+			.from('manga')
+			.select('id, title, feature_image_url')
+			.range(from, to);
+
+		if (fallbackError || !fallback) {
+			console.error('Error fetching manga:', fallbackError);
+			throw new Error('Failed to load manga');
+		}
+
+		// Shuffle the results client-side (less ideal but works)
+		fallbackManga = fallback
+			.map(item => ({ ...item, sort: Math.random() }))
+			.sort((a, b) => a.sort - b.sort)
+			.map(({ sort, ...item }) => item);
+	}
+
+	const finalManga = manga || fallbackManga;
+
+	// Get slugs for the manga
+	const mangaIds = finalManga.map((m: any) => m.id);
+	const { data: slugs, error: slugError } = await supabase
+		.from('slug_map')
+		.select('slug, manga_id')
+		.in('manga_id', mangaIds);
+
+	if (slugError || !slugs) {
+		console.error('Error fetching slugs:', slugError);
+		throw new Error('Failed to load slugs');
+	}
+
+	// Combine manga with slugs
+	const comics = finalManga.map((item: any) => ({
+		id: item.id,
+		title: item.title,
+		slug: slugs.find((s) => s.manga_id === item.id)?.slug ?? '',
+		featureImage: item.feature_image_url,
+		author: { name: 'Unknown' }
+	}));
+
+	const total = totalCount ?? 0;
+	const totalPages = Math.ceil(total / PAGE_SIZE);
+	const isFirstPage = page === 1;
+
+	return {
+		comics,
+		total,
+		page,
+		seed, // Include seed for consistent pagination
+		meta: {
+			title: isFirstPage
+				? 'SusManga | Read Hentai, Doujinshi, and Latest Manga'
+				: `Popular Manga | Page ${page} | SusManga `,
+			description: isFirstPage
+				? 'Discover popular manga, hentai, and doujinshi that others are reading on SusManga. Find trending adult comics and community favorites!'
+				: `Browse page ${page} of popular manga selections. Discover trending adult comics, hentai and doujinshi. Nhentai Alternative | Rule 34 Alternative`,
+			prev: page > 1 ? `/?page=${page - 1}&seed=${seed}` : null,
+			next: page < totalPages ? `/?page=${page + 1}&seed=${seed}` : null
+		}
+	};
+};

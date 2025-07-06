@@ -10,7 +10,7 @@
 </script>
 
 <svelte:head>
-	<title>{comic.title} | SusManga</title>
+	<title>{comic.title} | SusManga | Read Hentai Free</title>
 	<meta name="description" content={`Read ${comic.title} on SusManga.`} />
 	{#if comic.feature_image_url}
 		<meta property="og:image" content={comic.feature_image_url} />
