@@ -16,21 +16,33 @@ export async function load({ params, url: _url }) {
 
   const mangaId = slugRow.manga_id;
 
-  // 2) Fetch the manga's basic info
+  // 2) Fetch the manga's basic info (using your existing schema)
   const { data: manga, error: mangaErr } = await supabase
     .from('manga')
-    .select('id, title')
+    .select('id, title, feature_image_url')
     .eq('id', mangaId)
     .single();
   if (mangaErr || !manga) throw error(404, 'Manga record missing');
 
-  // 3) Fetch tag IDs from the join table
+  // 3) Fetch tag IDs from the join table (keeping original approach)
   const { data: tagRows, error: tagErr } = await supabase
     .from('manga_tags')
     .select('tag_id')
     .eq('manga_id', mangaId);
   if (tagErr) throw error(500, 'Failed to load tags');
   const tagIds = (tagRows || []).map((r) => r.tag_id);
+
+  // 4) Fetch tag names separately if we have tag IDs
+  let tagNames: string[] = [];
+  if (tagIds.length > 0) {
+    const { data: tags, error: tagsErr } = await supabase
+      .from('tags')
+      .select('name')
+      .in('id', tagIds);
+    if (!tagsErr && tags) {
+      tagNames = tags.map((tag) => tag.name);
+    }
+  }
 
   // 4) Pagination parameters
   const pageNum = Number(_url.searchParams.get('page') ?? '1');
@@ -107,19 +119,27 @@ export async function load({ params, url: _url }) {
     }
   }
 
-  // 7) Generate SEO metadata on server-side
+  // 7) Generate comprehensive SEO metadata on server-side
+  const baseTitle = manga.title;
+  const siteTitle = "SusManga";
+  const separator = " | ";
+  
+  // More descriptive and unique titles
   const seoTitle = pageNum === 1
-    ? `${manga.title} - Read Online Free | SusManga`
-    : `${manga.title} - Page ${pageNum} | Read Online Free | SusManga`;
+    ? `Read ${baseTitle} Online Free - Chapter ${pageNum}${separator}${siteTitle}`
+    : `${baseTitle} - Page ${pageNum} Online Reader${separator}${siteTitle}`;
 
-  const seoDescription = `Read ${manga.title} online${
-    pageNum > 1 ? ` - page ${pageNum}` : ''
-  }. SusManga lets you enjoy high quality translated manga.`;
+  // Rich description with more context
+  const seoDescription = pageNum === 1
+    ? `Read ${baseTitle} manga online for free at SusManga. High quality translated manga with fast updates.${tagNames.length > 0 ? ` Available genres: ${tagNames.slice(0, 3).join(', ')}.` : ''}`
+    : `Continue reading ${baseTitle} - Page ${pageNum} at SusManga. Free online manga reader with high quality images and fast loading.`;
 
+  // Canonical URL
   const canonical = `https://susmanga.com/comic/${slug}/read${
     pageNum > 1 ? `?page=${pageNum}` : ''
   }`;
 
+  // Pagination links
   const prev = pageNum > 1
     ? `/comic/${slug}/read${pageNum - 1 === 1 ? '' : `?page=${pageNum - 1}`}`
     : undefined;
@@ -128,24 +148,48 @@ export async function load({ params, url: _url }) {
     ? `/comic/${slug}/read?page=${pageNum + 1}`
     : undefined;
 
+  // Open Graph and Twitter metadata
+  const ogImage = pages[0]?.image_url || manga.feature_image_url || '/default-manga-cover.jpg';
+  
+  // JSON-LD structured data for better SEO
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ComicSeries",
+    "name": manga.title,
+    "description": seoDescription,
+    "url": `https://susmanga.com/comic/${slug}`,
+    "image": ogImage,
+    "genre": tagNames,
+    "numberOfEpisodes": totalPages,
+    "publisher": {
+      "@type": "Organization",
+      "name": siteTitle,
+      "url": "https://susmanga.com"
+    }
+  };
+
   return {
     slug,
     manga: {
       id: manga.id,
       title: manga.title,
-      tagIds
+      tagIds,
+      tagNames
     },
     images: pages.map((p) => p.image_url),
     currentPage: pageNum,
     totalPages,
     randomComics,
-    // SEO metadata for server-side rendering
+    // Comprehensive SEO metadata for server-side rendering
     seo: {
       title: seoTitle,
       description: seoDescription,
       canonical,
       prev,
-      next
+      next,
+      keywords: [...tagNames, manga.title, 'manga', 'read online', 'free manga'].join(', '),
+      ogImage,
+      jsonLd
     }
   };
 }
