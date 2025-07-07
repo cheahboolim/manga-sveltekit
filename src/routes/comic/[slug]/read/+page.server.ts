@@ -46,7 +46,7 @@ export async function load({ params, url: _url }) {
 
   // 4) Pagination parameters
   const pageNum = Number(_url.searchParams.get('page') ?? '1');
-  const IMAGES_PER_PAGE = 3;
+  const IMAGES_PER_PAGE = 1;
   const offset = (pageNum - 1) * IMAGES_PER_PAGE;
 
   // 5) Pull that page's images

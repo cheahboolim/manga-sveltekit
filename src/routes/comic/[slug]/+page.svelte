@@ -4,9 +4,17 @@
 	import MetaGroup from '$lib/components/MetaGroup.svelte';
 	import RandomPost from '$lib/components/RandomPost.svelte';
 	import TrafficStarsAd from '$lib/components/TrafficStarsAd.svelte';
+	import ImageErrorRefreshButton from '$lib/components/ImageErrorRefreshButton.svelte';
+	import { goto } from '$app/navigation';
 
 	export let data;
 	const { slug, comic } = data;
+
+	let featureImageError = false;
+
+	function refreshFeatureImage() {
+		goto(`/comic/${slug}`, { invalidateAll: true });
+	}
 </script>
 
 <svelte:head>
@@ -27,8 +35,10 @@
 					class="w-full rounded-lg hover:opacity-90 transition"
 					width="600"
 					height="900"
+					on:error={() => (featureImageError = true)}
 				/>
 			</a>
+			<ImageErrorRefreshButton show={featureImageError} onRefresh={refreshFeatureImage} />
 		{/if}
 
 		<div>
@@ -54,7 +64,6 @@
 			<MetaGroup type="characters" label="Characters" items={comic.characters} />
 		</div>
 
-		<!-- 🔥 Bigger, bolder, shadowed Start Reading button -->
 		<a href={`/comic/${slug}/read?page=1`} class="block mt-6">
 			<button
 				class="bg-[#FF1493] hover:bg-[#e01382] text-white text-lg font-bold px-6 py-3 rounded-xl shadow-lg border border-transparent w-full sm:w-auto transition"
@@ -70,9 +79,6 @@
 			</div>
 		{/if}
 	</div>
-
-	<!-- Hot Now Widget -->
-	
 
 	<SimilarManga tagIds={comic.tags.map(tag => Number(tag.id))} currentMangaId={comic.id} />
 	<TrafficStarsAd />

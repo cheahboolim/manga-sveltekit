@@ -38,6 +38,17 @@
     }
   }
 
+  // Preload adjacent images for faster navigation
+  let preloadedImages = new Set<string>();
+
+  function preloadImage(url: string) {
+    if (!preloadedImages.has(url)) {
+      const img = new Image();
+      img.src = url;
+      preloadedImages.add(url);
+    }
+  }
+
   // Use server-generated SEO data directly - no duplication!
   onMount(() => {
     // Set the SEO metadata from server-side data
@@ -48,6 +59,41 @@
       ...(data.seo.prev && { prev: data.seo.prev }),
       ...(data.seo.next && { next: data.seo.next })
     });
+
+    // Preload next and previous page images
+    const nextPageUrl = `/comic/${slug}/read?page=${currentPage + 1}`;
+    const prevPageUrl = `/comic/${slug}/read?page=${currentPage - 1}`;
+    
+    // Preload next/prev pages in background
+    if (currentPage < totalPages) {
+      fetch(nextPageUrl).then(response => {
+        if (response.ok) {
+          // Optionally extract image URLs from response and preload them
+        }
+      }).catch(() => {});
+    }
+    
+    if (currentPage > 1) {
+      fetch(prevPageUrl).then(response => {
+        if (response.ok) {
+          // Optionally extract image URLs from response and preload them
+        }
+      }).catch(() => {});
+    }
+
+    // Add keyboard navigation
+    function handleKeydown(event: KeyboardEvent) {
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        goToPage(currentPage - 1);
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        goToPage(currentPage + 1);
+      }
+    }
+
+    document.addEventListener('keydown', handleKeydown);
+    return () => document.removeEventListener('keydown', handleKeydown);
   });
 
   function goToPage(n: number) {
@@ -58,6 +104,24 @@
         invalidateAll: true
       });
     }
+  }
+
+  // Click navigation handlers
+  function handleImageClick(event: MouseEvent) {
+    const target = event.currentTarget as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    const clickX = event.clientX - rect.left;
+    const imageWidth = rect.width;
+    
+    // Left third of image = previous page
+    if (clickX < imageWidth / 3) {
+      goToPage(currentPage - 1);
+    }
+    // Right third of image = next page
+    else if (clickX > (imageWidth * 2) / 3) {
+      goToPage(currentPage + 1);
+    }
+    // Middle third does nothing (prevents accidental navigation)
   }
 
   // Dynamic page title for browser tab (avoiding reactive property issues)
@@ -140,19 +204,61 @@
         • {manga.tagNames.slice(0, 3).join(', ')}
       {/if}
     </p>
+    <!-- Navigation hint -->
+    <p class="text-gray-500 text-xs mt-2">
+      💡 Click left/right sides of image to navigate • Use arrow keys
+    </p>
   </header>
 
-  <!-- Enhanced images with better SEO -->
+  <!-- Enhanced images with click navigation -->
   <section class="space-y-4 mb-8" aria-label="Manga pages">
     {#each data.images as url, idx}
-      <div class="relative">
-        <img
-          src={url}
-          alt={`${manga.title} - Page ${(currentPage - 1) * IMAGES_PER_PAGE + idx + 1}`}
-          class="w-full rounded-lg shadow-lg"
-          loading="lazy"
-          decoding="async"
-        />
+      <div class="relative group">
+        <div
+          class="relative cursor-pointer select-none"
+          on:click={handleImageClick}
+          role="button"
+          tabindex="0"
+          aria-label="Click left or right to navigate pages"
+        >
+          <img
+            src={url}
+            alt={`${manga.title} - Page ${(currentPage - 1) * IMAGES_PER_PAGE + idx + 1}`}
+            class="w-full rounded-lg shadow-lg"
+            loading="lazy"
+            decoding="async"
+          />
+          
+          <!-- Click zones overlay (visible on hover) -->
+          <div class="absolute inset-0 flex opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <!-- Left click zone -->
+            {#if currentPage > 1}
+              <div class="w-1/3 h-full flex items-center justify-start pl-4 bg-transparent rounded-l-lg">
+                <div class="bg-black bg-opacity-30 text-white px-2 py-1 rounded text-xs">
+                  ← Previous
+                </div>
+              </div>
+            {:else}
+              <div class="w-1/3 h-full"></div>
+            {/if}
+            
+            <!-- Middle zone (no action) -->
+            <div class="w-1/3 h-full"></div>
+            
+            <!-- Right click zone -->
+            {#if currentPage < totalPages}
+              <div class="w-1/3 h-full flex items-center justify-end pr-4 bg-transparent rounded-r-lg">
+                <div class="bg-black bg-opacity-30 text-white px-2 py-1 rounded text-xs">
+                  Next →
+                </div>
+              </div>
+            {:else}
+              <div class="w-1/3 h-full"></div>
+            {/if}
+          </div>
+        </div>
+        
+        <!-- Page number overlay -->
         <div class="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs">
           Page {(currentPage - 1) * IMAGES_PER_PAGE + idx + 1}
         </div>
@@ -244,7 +350,7 @@
 <style>
   /* Enhanced visual hierarchy */
   main {
-    background: linear-gradient(135deg, #1a1a2e 0%, #1a1a2e 100%);
+    background: linear-gradient(135deg, #000000 0%, #000000 100%);
     min-height: 100vh;
   }
   

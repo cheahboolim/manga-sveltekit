@@ -31,7 +31,10 @@
   });
 </script>
 
-<div
-  bind:this={adContainer}
-  class="adsterra-banner flex justify-center items-center w-full"
-></div>
+<!-- ✅ Reserve height to prevent layout shifts -->
+<div class="w-full flex justify-center">
+  <div
+    bind:this={adContainer}
+    class="w-[300px] h-[250px] overflow-hidden relative bg-neutral-900"
+  ></div>
+</div>
