@@ -66,7 +66,8 @@
 
 	<!-- Top Banner Ad -->
 	<div class="container mx-auto px-4 py-2">
-		<AAdsBanner />
+		<BannerAd />
+		
 	</div>
 
 	<main class="flex-1">
@@ -74,7 +75,7 @@
 	</main>
 
 		<div class="container mx-auto px-4 py-2">
-		<BannerAd />
+		<AAdsBanner />
 	</div>
 
 	<!-- Bottom Banner Ad -->
