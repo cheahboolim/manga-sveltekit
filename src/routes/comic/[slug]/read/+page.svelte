@@ -6,6 +6,7 @@
   import SimilarManga from '$lib/components/SimilarManga.svelte';
   import RandomPost from '$lib/components/RandomPost.svelte';
   import TrafficStarsAd from '$lib/components/TrafficStarsAd.svelte';
+	import AAdsMiddleBanner from '$lib/components/AAdsMiddleBanner.svelte'
 
   export let data: {
     slug: string;
@@ -327,6 +328,7 @@
 
   <!-- Content sections with better spacing -->
   <div class="space-y-8">
+    <AAdsMiddleBanner />
     <!-- Similar Manga Widget -->
     <section aria-label="Similar manga recommendations">
       <SimilarManga 

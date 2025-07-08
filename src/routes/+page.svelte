@@ -1,4 +1,5 @@
 <script lang="ts">
+	import AAdsMiddleBanner from '$lib/components/AAdsMiddleBanner.svelte'
 	import RandomHome from '$lib/components/RandomHome.svelte';
 	import TrafficStarsAd from '$lib/components/TrafficStarsAd.svelte';
 	export let data;
@@ -36,5 +37,8 @@
 
 <main class="max-w-6xl mx-auto px-4 py-8">
 	<RandomHome comics={data.comics} page={data.page} total={data.total} seed={data.seed} />
+
+	<AAdsMiddleBanner />
+
 	<TrafficStarsAd />
 </main>

@@ -6,6 +6,7 @@
 	import TrafficStarsAd from '$lib/components/TrafficStarsAd.svelte';
 	import ImageErrorRefreshButton from '$lib/components/ImageErrorRefreshButton.svelte';
 	import { goto } from '$app/navigation';
+	import AAdsMiddleBanner from '$lib/components/AAdsMiddleBanner.svelte'
 
 	export let data;
 	const { slug, comic } = data;
@@ -79,7 +80,10 @@
 			</div>
 		{/if}
 	</div>
-
+<!-- Add spacing above the ad -->
+<div class="mt-10">
+	<AAdsMiddleBanner />
+</div>
 	<SimilarManga tagIds={comic.tags.map(tag => Number(tag.id))} currentMangaId={comic.id} />
 	<TrafficStarsAd />
 	<RandomPost comics={data.randomComics} />
