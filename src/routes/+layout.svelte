@@ -15,6 +15,7 @@
 	import TSVideoInstantAd from '$lib/components/TSVideoInstantAd.svelte';
 
 	import AppInstallBanner from '$lib/components/AppInstallBanner.svelte';
+	import AAdsBanner from '$lib/components/AAdsBanner.svelte'
 
 	onMount(() => {
 		// Future: theme or auth setup here if needed
@@ -65,12 +66,16 @@
 
 	<!-- Top Banner Ad -->
 	<div class="container mx-auto px-4 py-2">
-		<BannerAd />
+		<AAdsBanner />
 	</div>
 
 	<main class="flex-1">
 		<slot />
 	</main>
+
+		<div class="container mx-auto px-4 py-2">
+		<BannerAd />
+	</div>
 
 	<!-- Bottom Banner Ad -->
 	<div class="container mx-auto px-4 py-2">
