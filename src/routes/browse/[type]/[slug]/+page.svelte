@@ -13,6 +13,7 @@
     page: number;
     totalPages: number;
   };
+	import NativeAds from '$lib/components/adsterra/NativeAds.svelte'
   import TrafficStarsAd from '$lib/components/TrafficStarsAd.svelte';
 </script>
 
@@ -63,4 +64,5 @@
     </div>
   {/if}
   <TrafficStarsAd />
+  <NativeAds />
 </main>

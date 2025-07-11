@@ -73,8 +73,7 @@
 	<main class="flex-1">
 		<slot />
 	</main>
-
-		<div class="container mx-auto px-4 py-2">
+	<div class="container mx-auto px-4 py-2">
 		<AAdsBanner />
 	</div>
 

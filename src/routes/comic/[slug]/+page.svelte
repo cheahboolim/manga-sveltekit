@@ -7,6 +7,8 @@
 	import ImageErrorRefreshButton from '$lib/components/ImageErrorRefreshButton.svelte';
 	import { goto } from '$app/navigation';
 	import AAdsMiddleBanner from '$lib/components/AAdsMiddleBanner.svelte'
+	import AAdsBanner from '$lib/components/AAdsBanner.svelte'
+	import NativeAds from '$lib/components/adsterra/NativeAds.svelte'
 
 	export let data;
 	const { slug, comic } = data;
@@ -85,6 +87,8 @@
 	<AAdsMiddleBanner />
 </div>
 	<SimilarManga tagIds={comic.tags.map(tag => Number(tag.id))} currentMangaId={comic.id} />
-	<TrafficStarsAd />
+	<AAdsBanner />
 	<RandomPost comics={data.randomComics} />
+	<TrafficStarsAd />
+	<NativeAds	/>
 </main>
