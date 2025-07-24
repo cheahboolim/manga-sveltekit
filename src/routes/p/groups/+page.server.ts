@@ -2,7 +2,7 @@ import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 import { supabase } from '$lib/supabaseClient';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ url }) => {
 	const { data, error: err } = await supabase
 		.from('groups')
 		.select('id, name, slug')
@@ -20,5 +20,8 @@ export const load: PageServerLoad = async () => {
 		grouped[key].push(group);
 	}
 
-	return { grouped };
+	return {
+		grouped,
+		canonicalUrl: `https://susmanga.com${url.pathname}`
+	};
 };

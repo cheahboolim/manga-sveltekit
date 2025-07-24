@@ -1,9 +1,13 @@
 <script lang="ts">
   import { writable, derived } from 'svelte/store';
-  import { seo } from '$lib/seo';
 
   export let data: {
     grouped: Record<string, { id: string; name: string; slug: string }[]>;
+    seo?: {
+      title: string;
+      description: string;
+      canonical: string;
+    };
   };
 
   const searchQuery = writable('');
@@ -26,14 +30,20 @@
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
-
-  // SEO
-  seo.set({
-    title: 'Browse Categories A-Z | SusManga',
-    description: 'Explore manga sorted by category — action, romance, fantasy, and more.',
-    canonical: 'https://susmanga.com/p/categories'
-  });
 </script>
+
+<svelte:head>
+  <title>{data.seo?.title}</title>
+  <meta name="description" content={data.seo?.description} />
+  <link rel="canonical" href={data.seo?.canonical} />
+  <meta property="og:title" content={data.seo?.title} />
+  <meta property="og:description" content={data.seo?.description} />
+  <meta property="og:url" content={data.seo?.canonical} />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content={data.seo?.title} />
+  <meta name="twitter:description" content={data.seo?.description} />
+</svelte:head>
 
 <style>
   .sticky-nav {

@@ -20,5 +20,12 @@ export const load: PageServerLoad = async () => {
 		grouped[key].push(category);
 	}
 
-	return { grouped };
+	return {
+		grouped,
+		seo: {
+			title: 'Browse Categories A–Z | SusManga',
+			description: 'Explore manga sorted by category — action, romance, fantasy, and more.',
+			canonical: 'https://susmanga.com/p/categories'
+		}
+	};
 };

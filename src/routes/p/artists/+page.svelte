@@ -1,11 +1,13 @@
 <script lang="ts">
-  import { page } from '$app/stores';
-  import { onMount } from 'svelte';
   import { writable, derived } from 'svelte/store';
-  import { seo } from '$lib/seo';
 
   export let data: {
     grouped: Record<string, { id: string; name: string; slug: string }[]>;
+    seo?: {
+      title: string;
+      description: string;
+      canonical: string;
+    };
   };
 
   const searchQuery = writable('');
@@ -27,14 +29,20 @@
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
-
-  // Inject SEO
-  seo.set({
-    title: 'Browse Artists A-Z | SusManga',
-    description: 'Discover manga by your favorite artists. Browse through an A-Z index of all available manga artists on SusManga.',
-    canonical: 'https://susmanga.com/p/artists'
-  });
 </script>
+
+<svelte:head>
+  <title>{data.seo?.title}</title>
+  <meta name="description" content={data.seo?.description} />
+  <link rel="canonical" href={data.seo?.canonical} />
+  <meta property="og:title" content={data.seo?.title} />
+  <meta property="og:description" content={data.seo?.description} />
+  <meta property="og:url" content={data.seo?.canonical} />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content={data.seo?.title} />
+  <meta name="twitter:description" content={data.seo?.description} />
+</svelte:head>
 
 <main class="max-w-6xl mx-auto px-4 py-8">
   <h1 class="text-3xl font-bold mb-4">Search Artists</h1>

@@ -20,5 +20,12 @@ export const load: PageServerLoad = async () => {
 		grouped[key].push(artist);
 	}
 
-	return { grouped };
+	return {
+		grouped,
+		seo: {
+			title: 'Browse Artists A–Z | SusManga',
+			description: 'Discover manga by your favorite artists. Browse through an A–Z index of all available manga artists on SusManga.',
+			canonical: 'https://susmanga.com/p/artists'
+		}
+	};
 };

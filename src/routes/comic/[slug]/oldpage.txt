@@ -2,13 +2,26 @@
 	import ComicPreview from '$lib/components/ComicPreview.svelte';
 	import SimilarManga from '$lib/components/SimilarManga.svelte';
 	import MetaGroup from '$lib/components/MetaGroup.svelte';
+	import RandomPost from '$lib/components/RandomPost.svelte';
+	import TrafficStarsAd from '$lib/components/TrafficStarsAd.svelte';
+	import ImageErrorRefreshButton from '$lib/components/ImageErrorRefreshButton.svelte';
+	import { goto } from '$app/navigation';
+	import AAdsMiddleBanner from '$lib/components/AAdsMiddleBanner.svelte'
+	import AAdsBanner from '$lib/components/AAdsBanner.svelte'
+	import NativeAds from '$lib/components/adsterra/NativeAds.svelte'
 
 	export let data;
 	const { slug, comic } = data;
+
+	let featureImageError = false;
+
+	function refreshFeatureImage() {
+		goto(`/comic/${slug}`, { invalidateAll: true });
+	}
 </script>
 
 <svelte:head>
-	<title>{comic.title} | SusManga</title>
+	<title>{comic.title} | SusManga | Read Hentai Free</title>
 	<meta name="description" content={`Read ${comic.title} on SusManga.`} />
 	{#if comic.feature_image_url}
 		<meta property="og:image" content={comic.feature_image_url} />
@@ -25,8 +38,10 @@
 					class="w-full rounded-lg hover:opacity-90 transition"
 					width="600"
 					height="900"
+					on:error={() => (featureImageError = true)}
 				/>
 			</a>
+			<ImageErrorRefreshButton show={featureImageError} onRefresh={refreshFeatureImage} />
 		{/if}
 
 		<div>
@@ -52,7 +67,6 @@
 			<MetaGroup type="characters" label="Characters" items={comic.characters} />
 		</div>
 
-		<!-- 🔥 Bigger, bolder, shadowed Start Reading button -->
 		<a href={`/comic/${slug}/read?page=1`} class="block mt-6">
 			<button
 				class="bg-[#FF1493] hover:bg-[#e01382] text-white text-lg font-bold px-6 py-3 rounded-xl shadow-lg border border-transparent w-full sm:w-auto transition"
@@ -68,6 +82,13 @@
 			</div>
 		{/if}
 	</div>
-
+<!-- Add spacing above the ad -->
+<div class="mt-10">
+	<AAdsMiddleBanner />
+</div>
 	<SimilarManga tagIds={comic.tags.map(tag => Number(tag.id))} currentMangaId={comic.id} />
+	<AAdsBanner />
+	<RandomPost comics={data.randomComics} />
+	<TrafficStarsAd />
+	<NativeAds	/>
 </main>

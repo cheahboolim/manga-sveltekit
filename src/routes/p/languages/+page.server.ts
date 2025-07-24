@@ -13,11 +13,11 @@ export const load: PageServerLoad = async () => {
 	}
 
 	const grouped: Record<string, typeof data> = {};
-	for (const language of data) {
-		const firstLetter = language.name[0]?.toUpperCase() ?? '#';
+	for (const lang of data) {
+		const firstLetter = lang.name[0]?.toUpperCase() ?? '#';
 		const key = /[A-Z]/.test(firstLetter) ? firstLetter : '#';
 		if (!grouped[key]) grouped[key] = [];
-		grouped[key].push(language);
+		grouped[key].push(lang);
 	}
 
 	return { grouped };
