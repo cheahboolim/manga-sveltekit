@@ -1,0 +1,30 @@
+<script>
+	import { onMount } from 'svelte';
+
+	let adLoaded = false;
+
+	onMount(() => {
+		if (adLoaded) return;
+
+		// Load the MagSrv ad provider script
+		const script = document.createElement('script');
+		script.src = 'https://a.magsrv.com/ad-provider.js';
+		script.async = true;
+		script.type = 'application/javascript';
+
+		script.onload = () => {
+			// Initialize AdProvider after script loads
+			if (window.AdProvider) {
+				window.AdProvider.push({"serve": {}});
+				adLoaded = true;
+			}
+		};
+
+		document.head.appendChild(script);
+	});
+</script>
+
+<!-- Ad container with the specific zone ID -->
+<div class="fixed bottom-4 right-4 z-50">
+	<ins class="eas6a97888e31" data-zoneid="5684168"></ins>
+</div>
