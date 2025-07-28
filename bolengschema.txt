@@ -1,0 +1,141 @@
+create table public.artists (
+  id serial not null,
+  name text not null,
+  slug text null,
+  constraint artists_pkey primary key (id),
+  constraint artists_name_key unique (name),
+  constraint artists_slug_key unique (slug)
+) TABLESPACE pg_default;
+
+create table public.categories (
+  id serial not null,
+  name text not null,
+  slug text null,
+  constraint categories_pkey primary key (id),
+  constraint categories_name_key unique (name),
+  constraint categories_slug_key unique (slug)
+) TABLESPACE pg_default;
+
+create table public.characters (
+  id uuid not null default gen_random_uuid (),
+  name text not null,
+  slug text not null,
+  constraint characters_pkey primary key (id),
+  constraint characters_name_key unique (name),
+  constraint characters_slug_key unique (slug)
+) TABLESPACE pg_default;
+
+create table public.groups (
+  id serial not null,
+  name text not null,
+  slug text null,
+  constraint groups_pkey primary key (id),
+  constraint groups_name_key unique (name),
+  constraint groups_slug_key unique (slug)
+) TABLESPACE pg_default;
+
+create table public.languages (
+  id serial not null,
+  name text not null,
+  slug text null,
+  constraint languages_pkey primary key (id),
+  constraint languages_name_key unique (name),
+  constraint languages_slug_key unique (slug)
+) TABLESPACE pg_default;
+
+create table public.manga (
+  id uuid not null default gen_random_uuid (),
+  manga_id text not null,
+  title text not null,
+  feature_image_url text null,
+  created_at timestamp with time zone null default now(),
+  constraint manga_pkey primary key (id)
+) TABLESPACE pg_default;
+
+create table public.manga_artists (
+  manga_id uuid not null,
+  artist_id integer not null,
+  constraint manga_artists_pkey primary key (manga_id, artist_id),
+  constraint manga_artists_artist_id_fkey foreign KEY (artist_id) references artists (id) on delete CASCADE,
+  constraint manga_artists_manga_id_fkey foreign KEY (manga_id) references manga (id) on delete CASCADE
+) TABLESPACE pg_default;
+
+create table public.manga_categories (
+  manga_id uuid not null,
+  category_id integer not null,
+  constraint manga_categories_pkey primary key (manga_id, category_id),
+  constraint manga_categories_category_id_fkey foreign KEY (category_id) references categories (id) on delete CASCADE,
+  constraint manga_categories_manga_id_fkey foreign KEY (manga_id) references manga (id) on delete CASCADE
+) TABLESPACE pg_default;
+
+create table public.manga_characters (
+  manga_id uuid not null,
+  character_id uuid not null,
+  constraint manga_characters_pkey primary key (manga_id, character_id),
+  constraint manga_characters_character_id_fkey foreign KEY (character_id) references characters (id) on delete CASCADE,
+  constraint manga_characters_manga_id_fkey foreign KEY (manga_id) references manga (id) on delete CASCADE
+) TABLESPACE pg_default;
+
+create table public.manga_groups (
+  manga_id uuid not null,
+  group_id integer not null,
+  constraint manga_groups_pkey primary key (manga_id, group_id),
+  constraint manga_groups_group_id_fkey foreign KEY (group_id) references groups (id) on delete CASCADE,
+  constraint manga_groups_manga_id_fkey foreign KEY (manga_id) references manga (id) on delete CASCADE
+) TABLESPACE pg_default;
+
+create table public.manga_languages (
+  manga_id uuid not null,
+  language_id integer not null,
+  constraint manga_languages_pkey primary key (manga_id, language_id),
+  constraint manga_languages_language_id_fkey foreign KEY (language_id) references languages (id) on delete CASCADE,
+  constraint manga_languages_manga_id_fkey foreign KEY (manga_id) references manga (id) on delete CASCADE
+) TABLESPACE pg_default;
+
+create table public.manga_parodies (
+  manga_id uuid not null,
+  parody_id integer not null,
+  constraint manga_parodies_pkey primary key (manga_id, parody_id),
+  constraint manga_parodies_manga_id_fkey foreign KEY (manga_id) references manga (id) on delete CASCADE,
+  constraint manga_parodies_parody_id_fkey foreign KEY (parody_id) references parodies (id) on delete CASCADE
+) TABLESPACE pg_default;
+
+create table public.manga_tags (
+  manga_id uuid not null,
+  tag_id integer not null,
+  constraint manga_tags_pkey primary key (manga_id, tag_id),
+  constraint manga_tags_manga_id_fkey foreign KEY (manga_id) references manga (id) on delete CASCADE,
+  constraint manga_tags_tag_id_fkey foreign KEY (tag_id) references tags (id) on delete CASCADE
+) TABLESPACE pg_default;
+
+create table public.pages (
+  id uuid not null default gen_random_uuid (),
+  manga_id uuid null,
+  page_number integer not null,
+  image_url text not null,
+  constraint pages_pkey primary key (id),
+  constraint pages_manga_id_fkey foreign KEY (manga_id) references manga (id) on delete CASCADE
+) TABLESPACE pg_default;
+
+create table public.parodies (
+  id serial not null,
+  name text not null,
+  slug text null,
+  constraint parodies_pkey primary key (id),
+  constraint parodies_name_key unique (name),
+  constraint parodies_slug_key unique (slug)
+) TABLESPACE pg_default;
+
+create table public.slug_map (
+  slug text not null,
+  manga_id uuid null,
+  constraint slug_map_pkey primary key (slug),
+  constraint slug_map_manga_id_fkey foreign KEY (manga_id) references manga (id) on delete CASCADE
+) TABLESPACE pg_default;
+
+create table public.slug_map (
+  slug text not null,
+  manga_id uuid null,
+  constraint slug_map_pkey primary key (slug),
+  constraint slug_map_manga_id_fkey foreign KEY (manga_id) references manga (id) on delete CASCADE
+) TABLESPACE pg_default;

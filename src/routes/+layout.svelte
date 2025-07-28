@@ -12,8 +12,6 @@
 	import BannerAd from '$lib/components/adsterra/BannerAd.svelte';
 	import BlueBallsAd from '$lib/components/ownads/BlueBallsAd.svelte';
 
-	import TSVideoInstantAd from '$lib/components/TSVideoInstantAd.svelte';
-
 	import AppInstallBanner from '$lib/components/AppInstallBanner.svelte';
 	import AAdsBanner from '$lib/components/AAdsBanner.svelte'
 
@@ -86,5 +84,5 @@
     <AppInstallBanner />
 </div>
 	<Footer />
-	<TSVideoInstantAd />
+	<!--<TSVideoInstantAd />-->
 </div>
