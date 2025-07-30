@@ -14,6 +14,8 @@
 
 	import AppInstallBanner from '$lib/components/AppInstallBanner.svelte';
 	import AAdsBanner from '$lib/components/AAdsBanner.svelte'
+	import ExoClickSlider from '$lib/components/ExoClickSlider.svelte';
+	import ExoOutstreamAd from '$lib/components/ExoOutstreamAd.svelte'
 
 	onMount(() => {
 		// Future: theme or auth setup here if needed
@@ -84,5 +86,7 @@
     <AppInstallBanner />
 </div>
 	<Footer />
+	<ExoClickSlider />
+	<ExoOutstreamAd />
 	<!--<TSVideoInstantAd />-->
 </div>
