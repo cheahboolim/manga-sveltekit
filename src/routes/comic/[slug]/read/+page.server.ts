@@ -1,3 +1,4 @@
+//old file
 /* eslint-disable prettier/prettier */
 // src/routes/comic/[slug]/read/+page.server.ts
 import { error } from '@sveltejs/kit';
