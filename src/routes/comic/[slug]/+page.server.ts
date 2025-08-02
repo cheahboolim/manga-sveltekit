@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+//src\routes\comic\[slug]\+page.server.ts
 import { error } from '@sveltejs/kit'
 import { supabase } from '$lib/supabaseClient'
 
@@ -38,7 +39,6 @@ export async function load({ params }) {
 		.select('image_url')
 		.eq('manga_id', mangaId)
 		.order('page_number', { ascending: true })
-		.limit(4)
 
 	async function fetchRelated<T extends string>(
 		joinTable: string,

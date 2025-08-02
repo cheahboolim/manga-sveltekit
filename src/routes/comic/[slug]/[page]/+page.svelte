@@ -1,4 +1,4 @@
-<!--src\routes\comic\[slug]\read\+page.svelte-->
+<!--src/routes/comic/[slug]/[page]/+page.svelte-->
 <script lang="ts">
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
@@ -33,14 +33,8 @@
   const { slug, manga, totalPages } = data;
   const IMAGES_PER_PAGE = data.images.length;
 
-  // Track URL param for dynamic navigation
+  // Current page from URL params
   let currentPage = data.currentPage;
-  $: {
-    const urlPage = Number($page.url.searchParams.get('page'));
-    if (!isNaN(urlPage) && urlPage !== currentPage) {
-      currentPage = urlPage;
-    }
-  }
 
   // Preload adjacent images for faster navigation
   let preloadedImages = new Set<string>();
@@ -65,8 +59,8 @@
     });
 
     // Preload next and previous page images
-    const nextPageUrl = `/comic/${slug}/read?page=${currentPage + 1}`;
-    const prevPageUrl = `/comic/${slug}/read?page=${currentPage - 1}`;
+    const nextPageUrl = `/comic/${slug}/${currentPage + 1}`;
+    const prevPageUrl = `/comic/${slug}/${currentPage - 1}`;
     
     // Preload next/prev pages in background
     if (currentPage < totalPages) {
@@ -102,7 +96,7 @@
 
   function goToPage(n: number) {
     if (n >= 1 && n <= totalPages) {
-      goto(`/comic/${slug}/read?page=${n}`, {
+      goto(`/comic/${slug}/${n}`, {
         replaceState: false,
         keepFocus: true,
         invalidateAll: true
@@ -128,7 +122,7 @@
     // Middle third does nothing (prevents accidental navigation)
   }
 
-  // Dynamic page title for browser tab (avoiding reactive property issues)
+  // Dynamic page title for browser tab
   let pageTitle: string;
   $: pageTitle = currentPage === 1
     ? `Read ${manga.title} Online Free - Chapter ${currentPage} | SusManga`

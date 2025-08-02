@@ -3,12 +3,11 @@
 import { error } from '@sveltejs/kit';
 import { supabase } from '$lib/supabaseClient';
 
-export async function load({ params }) {
+export async function load({ params, url: _url }) {
   const slug = params.slug;
-  const pageParam = params.page;
+  const pageNum = Number(params.page);
 
-  // Validate page parameter is a number
-  const pageNum = Number(pageParam);
+  // Validate page number
   if (isNaN(pageNum) || pageNum < 1) {
     throw error(404, 'Invalid page number');
   }
@@ -67,7 +66,7 @@ export async function load({ params }) {
   const totalImages = count ?? pages.length;
   const totalPages = Math.ceil(totalImages / IMAGES_PER_PAGE);
 
-  // Validate page number exists
+  // Validate that the requested page exists
   if (pageNum > totalPages) {
     throw error(404, 'Page not found');
   }
@@ -145,16 +144,16 @@ export async function load({ params }) {
     ? `Read ${baseTitle} manga online for free at SusManga. High quality translated manga with fast updates.${tagNames.length > 0 ? ` Available genres: ${tagNames.slice(0, 3).join(', ')}.` : ''}`
     : `Continue reading ${baseTitle} - Page ${pageNum} at SusManga. Free online manga reader with high quality images and fast loading.`;
 
-  // Canonical URL - Updated for new structure
-  const canonical = `https://susmanga.com/comic/${slug}/${pageNum}/`;
+  // Canonical URL
+  const canonical = `https://susmanga.com/comic/${slug}/${pageNum}`;
 
-  // Pagination links - Updated for new structure
+  // Pagination links
   const prev = pageNum > 1
-    ? `/comic/${slug}/${pageNum - 1}/`
+    ? `/comic/${slug}/${pageNum - 1}`
     : undefined;
 
   const next = pageNum < totalPages
-    ? `/comic/${slug}/${pageNum + 1}/`
+    ? `/comic/${slug}/${pageNum + 1}`
     : undefined;
 
   // Open Graph and Twitter metadata
