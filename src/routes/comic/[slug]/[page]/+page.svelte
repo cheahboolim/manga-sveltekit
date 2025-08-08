@@ -40,6 +40,8 @@
     const urlPage = Number($page.params.page);
     if (!isNaN(urlPage) && urlPage !== currentPage) {
       currentPage = urlPage;
+      // Track page navigation when URL changes
+      trackPageView();
     }
   }
 
@@ -54,6 +56,49 @@
     }
   }
 
+  // GA4 Tracking Function
+  function trackPageView() {
+    if (typeof gtag !== 'undefined') {
+      // Track comic page view with monetary value
+      gtag('event', 'comic_page_view', {
+        'event_category': 'engagement',
+        'event_label': slug,
+        'comic_slug': slug,
+        'comic_title': manga.title,
+        'page_number': currentPage,
+        'total_pages': totalPages,
+        'currency': 'USD',
+        'value': 0.001,
+        'custom_parameter_1': 'comic_engagement'
+      });
+
+      // Track as conversion event with value
+      gtag('event', 'conversion', {
+        'send_to': 'G-KT8S50J7ZK', // Replace GA_MEASUREMENT_ID with your actual ID
+        'currency': 'USD',
+        'value': 0.001,
+        'comic_title': manga.title,
+        'comic_slug': slug,
+        'page_number': currentPage
+      });
+
+      // Enhanced ecommerce tracking
+      gtag('event', 'view_item', {
+        'currency': 'USD',
+        'value': 0.001,
+        'items': [{
+          'item_id': `${slug}_page_${currentPage}`,
+          'item_name': `${manga.title} - Page ${currentPage}`,
+          'item_category': 'comic',
+          'item_brand': 'SusManga',
+          'item_variant': `page_${currentPage}`,
+          'quantity': 1,
+          'price': 0.001
+        }]
+      });
+    }
+  }
+
   // Use server-generated SEO data directly - no duplication!
   onMount(() => {
     // Set the SEO metadata from server-side data
@@ -64,6 +109,9 @@
       ...(data.seo.prev && { prev: data.seo.prev }),
       ...(data.seo.next && { next: data.seo.next })
     });
+
+    // Track initial page view
+    trackPageView();
 
     // Preload next and previous page images
     const nextPageUrl = `/comic/${slug}/${currentPage + 1}`;
@@ -103,6 +151,18 @@
 
   function goToPage(n: number) {
     if (n >= 1 && n <= totalPages) {
+      // Track navigation event
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'comic_navigation', {
+          'event_category': 'engagement',
+          'event_label': 'page_navigation',
+          'comic_slug': slug,
+          'from_page': currentPage,
+          'to_page': n,
+          'navigation_type': 'manual'
+        });
+      }
+      
       goto(`/comic/${slug}/${n}`, {
         replaceState: false,
         keepFocus: true,
@@ -120,10 +180,28 @@
     
     // Left third of image = previous page
     if (clickX < imageWidth / 3) {
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'comic_navigation', {
+          'event_category': 'engagement',
+          'event_label': 'image_click_prev',
+          'comic_slug': slug,
+          'page_number': currentPage,
+          'navigation_type': 'image_click'
+        });
+      }
       goToPage(currentPage - 1);
     }
     // Right third of image = next page
     else if (clickX > (imageWidth * 2) / 3) {
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'comic_navigation', {
+          'event_category': 'engagement',
+          'event_label': 'image_click_next',
+          'comic_slug': slug,
+          'page_number': currentPage,
+          'navigation_type': 'image_click'
+        });
+      }
       goToPage(currentPage + 1);
     }
     // Middle third does nothing (prevents accidental navigation)
