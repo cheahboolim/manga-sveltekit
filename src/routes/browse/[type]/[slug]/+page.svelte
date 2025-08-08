@@ -280,7 +280,6 @@
 
   <!-- Ad Placements -->
   <div class="mt-12 space-y-8">
-    <TrafficStarsAd />
     <NativeAds />
   </div>
 </main>

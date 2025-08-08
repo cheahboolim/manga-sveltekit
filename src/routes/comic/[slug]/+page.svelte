@@ -102,6 +102,5 @@
 	<SimilarManga tagIds={comic.tags.map(tag => Number(tag.id))} currentMangaId={comic.id} />
 	<AAdsBanner />
 	<RandomPost comics={data.randomComics} />
-	<TrafficStarsAd />
 	<NativeAds	/>
 </main>

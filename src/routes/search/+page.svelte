@@ -17,6 +17,7 @@
       next: string | null;
     };
   };
+	import NativeAds from '$lib/components/adsterra/NativeAds.svelte'
   import TrafficStarsAd from '$lib/components/TrafficStarsAd.svelte';
 </script>
 
@@ -69,5 +70,5 @@
       {/each}
     </div>
   {/if}
-  <TrafficStarsAd />
+  <NativeAds />
 </main>

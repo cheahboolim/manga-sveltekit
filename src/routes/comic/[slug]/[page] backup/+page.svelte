@@ -34,14 +34,8 @@
   const { slug, manga, totalPages } = data;
   const IMAGES_PER_PAGE = data.images.length;
 
-  // Track current page from URL params - this is the fix!
+  // Current page from URL params
   let currentPage = data.currentPage;
-  $: {
-    const urlPage = Number($page.params.page);
-    if (!isNaN(urlPage) && urlPage !== currentPage) {
-      currentPage = urlPage;
-    }
-  }
 
   // Preload adjacent images for faster navigation
   let preloadedImages = new Set<string>();
@@ -350,6 +344,7 @@
 
     <!-- Ad section -->
     <section aria-label="Advertisement">
+      <TrafficStarsAd />
       <NativeAds />
     </section>
   </div>

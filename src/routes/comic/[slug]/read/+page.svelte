@@ -1,4 +1,5 @@
 <!--src\routes\comic\[slug]\read\+page.svelte-->
+<!--old file-->
 <script lang="ts">
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
