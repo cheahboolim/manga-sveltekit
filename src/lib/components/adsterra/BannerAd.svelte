@@ -2,25 +2,30 @@
   import { onMount } from 'svelte';
 
   onMount(() => {
-    // Load Adsterra script dynamically
     const script = document.createElement('script');
     script.src = 'https://a.magsrv.com/ad-provider.js';
     script.async = true;
     script.type = 'application/javascript';
     document.body.appendChild(script);
 
-    // Ensure AdProvider is available and push ad config
     window.AdProvider = window.AdProvider || [];
     window.AdProvider.push({ serve: {} });
   });
 </script>
 
-<ins class="eas6a97888e10" data-zoneid="5695924"></ins>
+<div class="banner-wrapper">
+  <ins class="eas6a97888e10" data-zoneid="5695924"></ins>
+</div>
 
 <style>
-  /* Optional styling to make sure the banner fits container */
+  .banner-wrapper {
+    display: flex;
+    justify-content: center; /* center horizontally */
+    align-items: center; /* center vertically if needed */
+    width: 100%;
+  }
+
   ins.eas6a97888e10 {
     display: block;
-    width: 100%;
   }
 </style>

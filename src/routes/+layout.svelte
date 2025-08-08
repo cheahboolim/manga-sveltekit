@@ -11,14 +11,13 @@
 	import Footer from '$lib/components/Footer.svelte';
 	import BannerAd from '$lib/components/adsterra/BannerAd.svelte';
 	import BlueBallsAd from '$lib/components/ownads/BlueBallsAd.svelte';
-
 	import AppInstallBanner from '$lib/components/AppInstallBanner.svelte';
-	import AAdsBanner from '$lib/components/AAdsBanner.svelte'
+	import AAdsBanner from '$lib/components/AAdsBanner.svelte';
 	import ExoClickSlider from '$lib/components/ExoClickSlider.svelte';
-	import ExoOutstreamAd from '$lib/components/ExoOutstreamAd.svelte'
+	import ExoOutstreamAd from '$lib/components/ExoOutstreamAd.svelte';
 
 	onMount(() => {
-		// Future: theme or auth setup here if needed
+		// Future setup: theme, auth, etc.
 	});
 
 	// Track page views on navigation
@@ -28,51 +27,33 @@
 </script>
 
 <svelte:head>
-	<!-- Only static meta tags that don't change per page -->
 	<meta name="theme-color" content="#000000" />
 	<meta name="msapplication-TileColor" content="#000000" />
 	<link rel="manifest" href="/manifest.webmanifest" />
-	<link
-		rel="icon"
-		type="image/png"
-		sizes="16x16"
-		href="https://cdn.susmanga.com/favicon/favicon-16x16.png"
-	/>
-	<link
-		rel="icon"
-		type="image/png"
-		sizes="32x32"
-		href="https://cdn.susmanga.com/favicon/favicon-32x32.png"
-	/>
+
+	<!-- Favicons -->
+	<link rel="icon" type="image/png" sizes="16x16" href="https://cdn.susmanga.com/favicon/favicon-16x16.png" />
+	<link rel="icon" type="image/png" sizes="32x32" href="https://cdn.susmanga.com/favicon/favicon-32x32.png" />
 	<link rel="icon" href="https://cdn.susmanga.com/favicon/favicon.ico" sizes="any" />
 	<link rel="apple-touch-icon" href="https://cdn.susmanga.com/favicon/apple-touch-icon.png" />
-	<link
-		rel="icon"
-		type="image/png"
-		sizes="192x192"
-		href="https://cdn.susmanga.com/favicon/android-chrome-192x192.png"
-	/>
-	<link
-		rel="icon"
-		type="image/png"
-		sizes="512x512"
-		href="https://cdn.susmanga.com/favicon/android-chrome-512x512.png"
-	/>
+	<link rel="icon" type="image/png" sizes="192x192" href="https://cdn.susmanga.com/favicon/android-chrome-192x192.png" />
+	<link rel="icon" type="image/png" sizes="512x512" href="https://cdn.susmanga.com/favicon/android-chrome-512x512.png" />
 </svelte:head>
 
-<!-- Root wrapper with dark mode colors -->
+<!-- Root wrapper -->
 <div class="relative flex min-h-screen flex-col bg-background text-foreground antialiased">
 	<MainNav />
 
 	<!-- Top Banner Ad -->
 	<div class="container mx-auto px-4 py-2">
 		<BannerAd />
-		
 	</div>
 
 	<main class="flex-1">
 		<slot />
 	</main>
+
+	<!-- Mid Banner Ad -->
 	<div class="container mx-auto px-4 py-2">
 		<AAdsBanner />
 	</div>
@@ -82,11 +63,14 @@
 		<BlueBallsAd />
 	</div>
 
-<div class="container mx-auto px-4 py-2">
-    <AppInstallBanner />
-</div>
+	<!-- App Install CTA -->
+	<div class="container mx-auto px-4 py-2">
+		<AppInstallBanner />
+	</div>
+
 	<Footer />
+
+	<!-- Video Slider Ads (full width, no container to avoid breaking layout) -->
 	<ExoClickSlider />
 	<ExoOutstreamAd />
-	<!--<TSVideoInstantAd />-->
 </div>
