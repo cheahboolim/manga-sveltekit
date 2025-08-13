@@ -15,6 +15,7 @@
 	import AAdsBanner from '$lib/components/AAdsBanner.svelte';
 	import ExoClickSlider from '$lib/components/ExoClickSlider.svelte';
 	import ExoOutstreamAd from '$lib/components/ExoOutstreamAd.svelte';
+	import Coinpoll from '$lib/components/ownads/coinpoll.svelte'
 
 	onMount(() => {
 		// Future setup: theme, auth, etc.
@@ -45,8 +46,8 @@
 	<MainNav />
 
 	<!-- Top Banner Ad -->
-	<div class="container mx-auto px-4 py-2">
-		<BannerAd />
+	<div class="container mx-auto px-4 py-2 flex justify-center">
+		<Coinpoll />
 	</div>
 
 	<main class="flex-1">
