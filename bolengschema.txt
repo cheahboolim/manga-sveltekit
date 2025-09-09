@@ -1,3 +1,5 @@
+//supabase schema
+
 create table public.artists (
   id serial not null,
   name text not null,
