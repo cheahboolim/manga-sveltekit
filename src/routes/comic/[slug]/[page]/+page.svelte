@@ -7,10 +7,9 @@
   import { seo } from '$lib/seo';
   import SimilarManga from '$lib/components/SimilarManga.svelte';
   import RandomPost from '$lib/components/RandomPost.svelte';
-  import TrafficStarsAd from '$lib/components/TrafficStarsAd.svelte';
 	import AAdsMiddleBanner from '$lib/components/AAdsMiddleBanner.svelte';
-  import NativeAds from '$lib/components/adsterra/NativeAds.svelte';
 	import AAdsBanner from '$lib/components/AAdsBanner.svelte'
+	import BlueBallsAd from '$lib/components/ownads/BlueBallsAd.svelte'
 
   export let data: {
     slug: string;
@@ -428,7 +427,7 @@
 
     <!-- Ad section -->
     <section aria-label="Advertisement">
-      <NativeAds />
+      <BlueBallsAd />
     </section>
   </div>
 </main>

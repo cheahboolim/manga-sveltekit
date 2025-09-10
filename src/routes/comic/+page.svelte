@@ -4,7 +4,7 @@
 	import AAdsMiddleBanner from '$lib/components/AAdsMiddleBanner.svelte'
 	import NativeAds from '$lib/components/adsterra/NativeAds.svelte'
 	import { goto } from '$app/navigation'
-
+	
 	export let data
 
 	// Comic grid component inline since we need it styled consistently
@@ -46,10 +46,10 @@
 	<div class="text-center py-16">
 		<!-- Large 404 -->
 		<h1 class="text-8xl md:text-9xl font-bold text-[#FF1493] mb-4">404</h1>
-
+		
 		<!-- Main message -->
 		<h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Manga Not Found</h2>
-
+		
 		<!-- Explanation -->
 		<div class="max-w-2xl mx-auto space-y-4 text-gray-300 text-lg mb-8">
 			<p>Sorry! The manga you were looking for has been removed or is no longer available.</p>
@@ -65,7 +65,7 @@
 					Browse Popular Manga
 				</button>
 			</a>
-
+			
 			<a href="/search" class="inline-block">
 				<button
 					class="bg-gray-600 hover:bg-gray-500 text-white font-bold px-8 py-3 rounded-xl shadow-lg transition"
@@ -92,16 +92,8 @@
 			<!-- Manga Grid -->
 			<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
 				{#each data.recommendedComics as comic}
-					<div
-						class="group cursor-pointer"
-						on:click={() => navigateToComic(comic.slug)}
-						on:keydown={(e) => e.key === 'Enter' && navigateToComic(comic.slug)}
-						role="button"
-						tabindex="0"
-					>
-						<div
-							class="relative overflow-hidden rounded-lg bg-gray-800 shadow-lg transition-transform group-hover:scale-105"
-						>
+					<div class="group cursor-pointer" on:click={() => navigateToComic(comic.slug)} on:keydown={(e) => e.key === 'Enter' && navigateToComic(comic.slug)} role="button" tabindex="0">
+						<div class="relative overflow-hidden rounded-lg bg-gray-800 shadow-lg transition-transform group-hover:scale-105">
 							{#if comic.featureImage}
 								<img
 									src={comic.featureImage}
@@ -113,22 +105,16 @@
 									}}
 								/>
 							{:else}
-								<div
-									class="w-full h-48 sm:h-56 md:h-64 bg-gray-700 flex items-center justify-center"
-								>
+								<div class="w-full h-48 sm:h-56 md:h-64 bg-gray-700 flex items-center justify-center">
 									<span class="text-gray-400 text-sm">No Image</span>
 								</div>
 							{/if}
-
+							
 							<!-- Overlay on hover -->
-							<div
-								class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300"
-							></div>
-
+							<div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300"></div>
+							
 							<!-- Title overlay -->
-							<div
-								class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/80 to-transparent p-3"
-							>
+							<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/80 to-transparent p-3">
 								<h3 class="text-white text-sm font-medium line-clamp-2 leading-tight">
 									{comic.title}
 								</h3>
