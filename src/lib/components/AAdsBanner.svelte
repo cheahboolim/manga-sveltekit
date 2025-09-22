@@ -4,7 +4,8 @@
     data-aa="2401977"
     src="https://ad.a-ads.com/2401977?size=300x250"
     style="width:300px; height:250px; border:0; padding:0; overflow:hidden; background-color:transparent;"
-  ></iframe>
+    title="Advertisement Banner"
+    ></iframe>
 
   <a
     id="frame-link"

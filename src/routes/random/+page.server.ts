@@ -2,6 +2,11 @@ import type { PageServerLoad } from './$types';
 import { supabase } from '$lib/supabaseClient';
 
 export const load: PageServerLoad = async ({ url }) => {
+	// Set CDN cache for 5 minutes
+	const setHeaders = arguments[0]?.setHeaders;
+	setHeaders?.({
+		'Cache-Control': 'public, max-age=0, s-maxage=300, stale-while-revalidate=60'
+	});
 	const PAGE_SIZE = 20;
 
 	const pageParam = parseInt(url.searchParams.get('page') ?? '1', 10);
@@ -9,14 +14,13 @@ export const load: PageServerLoad = async ({ url }) => {
 	const refreshParam = url.searchParams.get('refresh');
 	const seedParam = url.searchParams.get('seed');
 
-	// Generate a seed for consistent pagination within the same random set
-	// If refresh=true or no seed, generate new seed
-	let seed: number;
-	if (refreshParam === 'true' || !seedParam) {
-		seed = Math.floor(Math.random() * 1000000);
-	} else {
-		seed = parseInt(seedParam, 10) || Math.floor(Math.random() * 1000000);
-	}
+		// Always generate a new seed for each cache refresh to ensure different manga
+		let seed: number;
+		if (refreshParam === 'true' || !seedParam) {
+			seed = Math.floor(Math.random() * 1000000);
+		} else {
+			seed = Math.floor(Math.random() * 1000000);
+		}
 
 	const from = (page - 1) * PAGE_SIZE;
 	const to = from + PAGE_SIZE - 1;

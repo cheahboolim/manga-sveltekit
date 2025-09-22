@@ -23,7 +23,12 @@ interface ComicItem {
 }
 
 export const load: PageServerLoad = async ({ url }) => {
-	const PAGE_SIZE = 20;
+		const PAGE_SIZE = 20;
+		// Set CDN cache for 5 minutes
+		const setHeaders = arguments[0]?.setHeaders;
+		setHeaders?.({
+			'Cache-Control': 'public, max-age=0, s-maxage=300, stale-while-revalidate=60'
+		});
 
 	const pageParam = parseInt(url.searchParams.get('page') ?? '1', 10);
 	const page = Math.max(1, isNaN(pageParam) ? 1 : pageParam);
@@ -108,20 +113,21 @@ export const load: PageServerLoad = async ({ url }) => {
 	const totalPages = Math.ceil(total / PAGE_SIZE);
 	const isFirstPage = page === 1;
 
-	return {
-		comics,
-		total,
-		page,
-		seed, // Include seed for consistent pagination
-		meta: {
-			title: isFirstPage
-				? 'SusManga | Read Hentai, Doujinshi, and Latest Manga'
-				: `Popular Manga | Page ${page} | SusManga `,
-			description: isFirstPage
-				? 'Discover popular manga, hentai, and doujinshi that others are reading on SusManga. Find trending adult comics and community favorites!'
-				: `Browse page ${page} of popular manga selections. Discover trending adult comics, hentai and doujinshi. Nhentai Alternative | Rule 34 Alternative`,
-			prev: page > 1 ? `/?page=${page - 1}&seed=${seed}` : null,
-			next: page < totalPages ? `/?page=${page + 1}&seed=${seed}` : null
-		}
-	} as const;
+		return {
+			comics,
+			total,
+			page,
+			seed, // Include seed for consistent pagination
+			meta: {
+				title: isFirstPage
+					? 'SusManga | Read Hentai, Doujinshi, and Latest Manga'
+					: `Popular Manga | Page ${page} | SusManga `,
+				description: isFirstPage
+					? 'Discover popular manga, hentai, and doujinshi that others are reading on SusManga. Find trending adult comics and community favorites!'
+					: `Browse page ${page} of popular manga selections. Discover trending adult comics, hentai and doujinshi. Nhentai Alternative | Rule 34 Alternative`,
+				prev: page > 1 ? `/?page=${page - 1}&seed=${seed}` : null,
+				next: page < totalPages ? `/?page=${page + 1}&seed=${seed}` : null,
+				canonical: `https://susmanga.com${url.pathname}${url.search}`
+			}
+		} as const;
 };

@@ -4,7 +4,8 @@
     data-aa="2401981"
     src="https://ad.a-ads.com/2401981?size=320x50"
     style="width:320px; height:50px; border:0; padding:0; overflow:hidden; background-color:transparent;"
-  ></iframe>
+    title="Advertisement Middle Banner"
+    ></iframe>
 
   <a
     href="https://aads.com/campaigns/new/?source_id=2401981&source_type=ad_unit&partner=2401981"

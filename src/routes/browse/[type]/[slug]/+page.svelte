@@ -1,34 +1,8 @@
 <script lang="ts">
   import { seo } from '$lib/seo';
-  import NativeAds from '$lib/components/adsterra/NativeAds.svelte';
   import TrafficStarsAd from '$lib/components/TrafficStarsAd.svelte';
 
-  export let data: {
-    type: string;
-    slug: string;
-    name: string;
-    typeLabel: string;
-    totalManga: number;
-    comics: {
-      id: string;
-      title: string;
-      slug: string;
-      featureImage: string;
-      author: { name: string };
-    }[];
-    page: number;
-    totalPages: number;
-    seo: {
-      title: string;
-      description: string;
-      canonical: string;
-      keywords: string;
-      ogTitle: string;
-      ogDescription: string;
-      ogImage: string;
-      structuredData: any;
-    };
-  };
+  export let data;
 
   // SEO setup
   seo.set(data.seo);
@@ -44,20 +18,13 @@
     const range = [];
     const current = data.page;
     const total = data.totalPages;
-    
-    // Always show first page
     if (current > 3) range.push(1);
     if (current > 4) range.push('...');
-    
-    // Show pages around current
     for (let i = Math.max(1, current - 2); i <= Math.min(total, current + 2); i++) {
       range.push(i);
     }
-    
-    // Show last pages
     if (current < total - 3) range.push('...');
     if (current < total - 2) range.push(total);
-    
     return range;
   })();
 </script>
@@ -67,40 +34,29 @@
   <meta name="description" content={data.seo.description} />
   <meta name="keywords" content={data.seo.keywords} />
   <link rel="canonical" href={data.seo.canonical} />
-  
-  <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content={data.seo.canonical} />
   <meta property="og:title" content={data.seo.ogTitle} />
   <meta property="og:description" content={data.seo.ogDescription} />
   <meta property="og:image" content={data.seo.ogImage} />
-  
-  <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="twitter:url" content={data.seo.canonical} />
   <meta property="twitter:title" content={data.seo.ogTitle} />
   <meta property="twitter:description" content={data.seo.ogDescription} />
   <meta property="twitter:image" content={data.seo.ogImage} />
-  
-  <!-- Additional SEO -->
   <meta name="robots" content="index, follow" />
   <meta name="author" content="SusManga" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <!-- Pagination SEO -->
   {#if hasPrevPage}
     <link rel="prev" href={`/browse/${data.type}/${data.slug}${data.page === 2 ? '' : `?page=${data.page - 1}`}`} />
   {/if}
   {#if hasNextPage}
     <link rel="next" href={`/browse/${data.type}/${data.slug}?page=${data.page + 1}`} />
   {/if}
-  
-  <!-- Structured Data -->
   {@html `<script type="application/ld+json">${JSON.stringify(data.seo.structuredData)}</script>`}
 </svelte:head>
 
 <main class="container mx-auto px-4 py-8 max-w-7xl">
-  <!-- Breadcrumb Navigation -->
   <nav aria-label="Breadcrumb" class="mb-6">
     <ol class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-300">
       <li><a href="/" class="hover:text-pink-500 transition-colors">Home</a></li>
@@ -113,29 +69,23 @@
     </ol>
   </nav>
 
-  <!-- Header Section -->
   <header class="mb-8">
     <h1 class="text-3xl md:text-4xl font-bold mb-4">
       <span class="text-gray-800 dark:text-gray-200 capitalize">{data.typeLabel}:</span>
       <span class="text-pink-500 ml-2">{data.name}</span>
     </h1>
-    
-    <!-- Results Summary -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-4">
       <p class="text-gray-600 dark:text-gray-300">
         {data.totalManga} manga found • 
         Showing {showingStart}-{showingEnd} of {data.totalManga}
         {#if data.page > 1}• Page {data.page} of {data.totalPages}{/if}
       </p>
-      
       {#if data.totalPages > 1}
         <div class="text-sm text-gray-500 dark:text-gray-400">
           Page {data.page} of {data.totalPages}
         </div>
       {/if}
     </div>
-
-    <!-- Category Description -->
     <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mb-6">
       <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
         {#if data.type === 'tags'}
@@ -159,7 +109,6 @@
     </div>
   </header>
 
-  <!-- Manga Grid -->
   {#if data.comics.length > 0}
     <section aria-label="Manga collection" class="mb-8">
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
@@ -197,10 +146,8 @@
     </div>
   {/if}
 
-  <!-- Enhanced Pagination -->
   {#if data.totalPages > 1}
     <nav aria-label="Pagination" class="flex flex-col items-center gap-4 mt-12">
-      <!-- Mobile Pagination (Simple) -->
       <div class="flex justify-center gap-2 sm:hidden">
         {#if hasPrevPage}
           <a
@@ -212,11 +159,9 @@
             ← Prev
           </a>
         {/if}
-        
         <span class="px-4 py-2 text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 rounded-lg">
           {data.page} / {data.totalPages}
         </span>
-
         {#if hasNextPage}
           <a
             href={`/browse/${data.type}/${data.slug}?page=${data.page + 1}`}
@@ -228,8 +173,6 @@
           </a>
         {/if}
       </div>
-
-      <!-- Desktop Pagination (Full) -->
       <div class="hidden sm:flex items-center gap-2">
         {#if hasPrevPage}
           <a
@@ -241,7 +184,6 @@
             ← Previous
           </a>
         {/if}
-
         {#each paginationRange as pageNum}
           {#if pageNum === '...'}
             <span class="px-2 py-2 text-gray-400">...</span>
@@ -263,7 +205,6 @@
             </a>
           {/if}
         {/each}
-
         {#if hasNextPage}
           <a
             href={`/browse/${data.type}/${data.slug}?page=${data.page + 1}`}
@@ -278,9 +219,7 @@
     </nav>
   {/if}
 
-  <!-- Ad Placements -->
   <div class="mt-12 space-y-8">
-    <NativeAds />
   </div>
 </main>
 
@@ -291,8 +230,6 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-  
-  /* Focus styles for better accessibility */
   a:focus-visible {
     outline: 2px solid #ec4899;
     outline-offset: 2px;

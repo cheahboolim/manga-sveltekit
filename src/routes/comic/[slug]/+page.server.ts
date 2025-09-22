@@ -1,145 +1,164 @@
-/* eslint-disable prettier/prettier */
-//src\routes\comic\[slug]\+page.server.ts
 import { error } from '@sveltejs/kit'
 import { supabase } from '$lib/supabaseClient'
 
 type RelatedMeta = {
-	id: string
-	name: string
-	slug: string
+  id: string
+  name: string
+  slug: string
 }
 
 type JoinRow<T extends string> = {
-	[key in T]: RelatedMeta | null
+  [key in T]: RelatedMeta | null
 }
 
-export async function load({ params }) {
-	const slug = params.slug
+export const load = async ({ params, url, setHeaders }) => {
+  const slug = params.slug
+  const refreshParam = url.searchParams.get('refresh')
 
-	const { data: slugRow, error: slugErr } = await supabase
-		.from('slug_map')
-		.select('manga_id')
-		.eq('slug', slug)
-		.single()
+  // Cache for 1 year at CDN/edge, unless ?refresh=true
+  if (refreshParam === 'true') {
+    setHeaders({
+      'cache-control': 'public, max-age=0, s-maxage=0'
+    })
+  } else {
+    setHeaders({
+      'cache-control': 'public, max-age=0, s-maxage=31536000, stale-while-revalidate=86400'
+    })
+  }
 
-	if (slugErr || !slugRow) throw error(404, 'Comic not found')
+  // 1. Get manga ID from slug
+  const { data: slugRow, error: slugErr } = await supabase
+    .from('slug_map')
+    .select('manga_id')
+    .eq('slug', slug)
+    .single()
 
-	const mangaId = slugRow.manga_id
+  if (slugErr || !slugRow) throw error(404, 'Comic not found')
+  const mangaId = slugRow.manga_id
 
-	const { data: manga, error: mangaErr } = await supabase
-		.from('manga')
-		.select('id, title, feature_image_url, created_at')
-		.eq('id', mangaId)
-		.single()
+  // 2. Get manga details and all related meta in one go (using joins)
+  const { data: manga, error: mangaErr } = await supabase
+    .from('manga')
+    .select(`
+      id,
+      title,
+      feature_image_url,
+      created_at,
+      manga_artists: manga_artists(artist_id(id, name, slug)),
+      manga_tags: manga_tags(tag_id(id, name, slug)),
+      manga_groups: manga_groups(group_id(id, name, slug)),
+      manga_categories: manga_categories(category_id(id, name, slug)),
+      manga_languages: manga_languages(language_id(id, name, slug)),
+      manga_parodies: manga_parodies(parody_id(id, name, slug)),
+      manga_characters: manga_characters(character_id(id, name, slug))
+    `)
+    .eq('id', mangaId)
+    .single()
 
-	if (mangaErr || !manga) throw error(404, 'Comic not found')
+  if (mangaErr || !manga) throw error(404, 'Comic not found')
 
-	const { data: pages } = await supabase
-		.from('pages')
-		.select('image_url')
-		.eq('manga_id', mangaId)
-		.order('page_number', { ascending: true })
+  // Helper to flatten join arrays
+  function flattenMeta<T extends string>(arr: any[], key: T): RelatedMeta[] {
+    return (
+      arr?.map((row) => row[key])?.filter(Boolean) ?? []
+    )
+  }
 
-	async function fetchRelated<T extends string>(
-		joinTable: string,
-		foreignKey: T
-	): Promise<RelatedMeta[]> {
-		const { data } = await supabase
-			.from(joinTable)
-			.select(`${foreignKey}(id, name, slug)`)
-			.eq('manga_id', mangaId)
+  // 3. Get pages (images)
+  const { data: pages, error: pagesErr } = await supabase
+    .from('pages')
+    .select('image_url')
+    .eq('manga_id', mangaId)
+    .order('page_number', { ascending: true })
 
-		return (
-			((data as JoinRow<T>[] | null)
-				?.map((row) => row[foreignKey])
-				.filter(Boolean) as RelatedMeta[]) ?? []
-		)
-	}
+  if (pagesErr) {
+    console.error('Error fetching pages:', pagesErr)
+  }
 
-	const [artists, tags, groups, categories, languages, parodies, characters] = await Promise.all([
-		fetchRelated('manga_artists', 'artist_id'),
-		fetchRelated('manga_tags', 'tag_id'),
-		fetchRelated('manga_groups', 'group_id'),
-		fetchRelated('manga_categories', 'category_id'),
-		fetchRelated('manga_languages', 'language_id'),
-		fetchRelated('manga_parodies', 'parody_id'),
-		fetchRelated('manga_characters', 'character_id')
-	])
+  // 4. Get 8 random comics for "Hot Now" widget (single query with join for slugs)
+  const RANDOM_LIMIT = 8
+  const randomSeed = Math.floor(Math.random() * 1000000)
 
-	// Fetch 8 random comics for the "Hot Now" widget
-	const RANDOM_LIMIT = 8;
-	const randomSeed = Math.floor(Math.random() * 1000000);
+  let randomComics: any[] = []
+  const { data: randomManga, error: randomError } = await supabase
+    .rpc('get_random_manga', {
+      seed_value: randomSeed / 1000000,
+      limit_count: RANDOM_LIMIT,
+      offset_count: 0
+    })
 
-	// Try to use the RPC function for seeded random
-	const { data: randomManga, error: randomError } = await supabase
-		.rpc('get_random_manga', {
-			seed_value: randomSeed / 1000000,
-			limit_count: RANDOM_LIMIT,
-			offset_count: 0
-		});
+  if (randomManga && randomManga.length > 0) {
+    // Get slugs for these manga in one query
+    const randomMangaIds = randomManga.map((m: any) => m.id)
+    const { data: randomSlugs } = await supabase
+      .from('slug_map')
+      .select('slug, manga_id')
+      .in('manga_id', randomMangaIds)
 
-	// Fallback if RPC doesn't exist
-	let fallbackRandomManga;
-	if (randomError || !randomManga) {
-		console.log('RPC not available, falling back to simple random for hot widget');
-		const { data: fallback, error: fallbackError } = await supabase
-			.from('manga')
-			.select('id, title, feature_image_url')
-			.limit(RANDOM_LIMIT * 3); // Get more to shuffle from
+    randomComics = randomManga.map((item: any) => ({
+      id: item.id,
+      title: item.title,
+      slug: randomSlugs?.find((s) => s.manga_id === item.id)?.slug ?? '',
+      featureImage: item.feature_image_url,
+      author: { name: 'Unknown' }
+    }))
+  }
 
-		if (fallbackError || !fallback) {
-			console.error('Error fetching random manga:', fallbackError);
-			fallbackRandomManga = [];
-		} else {
-			// Shuffle the results client-side
-			fallbackRandomManga = fallback
-				.map(item => ({ ...item, sort: Math.random() }))
-				.sort((a, b) => a.sort - b.sort)
-				.slice(0, RANDOM_LIMIT)
-				.map(({ sort, ...item }) => item);
-		}
-	}
+  // SEO meta fields
+  const baseUrl = 'https://susmanga.com'
+  const canonicalUrl = `${baseUrl}/comic/${slug}`
+  const ogImage = manga.feature_image_url || 'https://cdn.susmanga.com/og-image.jpg'
+  const description = `Read "${manga.title}" online. ${flattenMeta(manga.manga_tags, 'tag_id').map(t => t.name).join(', ')}. Free manga, doujinshi, hentai, and more on SusManga.`
 
-	const finalRandomManga = randomManga || fallbackRandomManga || [];
+  // Structured data (JSON-LD for comic)
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Book",
+    "name": manga.title,
+    "image": ogImage,
+    "author": flattenMeta(manga.manga_artists, 'artist_id').map(a => a.name),
+    "genre": flattenMeta(manga.manga_tags, 'tag_id').map(t => t.name),
+    "datePublished": manga.created_at,
+    "url": canonicalUrl
+  }
 
-	// Get slugs for the random manga
-	const randomMangaIds = finalRandomManga.map((m: any) => m.id);
-	let randomComics = [];
-	
-	if (randomMangaIds.length > 0) {
-		const { data: randomSlugs, error: randomSlugError } = await supabase
-			.from('slug_map')
-			.select('slug, manga_id')
-			.in('manga_id', randomMangaIds);
-
-		if (!randomSlugError && randomSlugs) {
-			// Combine random manga with slugs
-			randomComics = finalRandomManga.map((item: any) => ({
-				id: item.id,
-				title: item.title,
-				slug: randomSlugs.find((s) => s.manga_id === item.id)?.slug ?? '',
-				featureImage: item.feature_image_url,
-				author: { name: 'Unknown' }
-			}));
-		}
-	}
-
-	return {
-		slug,
-		comic: {
-			id: manga.id,
-			title: manga.title,
-			feature_image_url: manga.feature_image_url,
-			publishedAt: manga.created_at,
-			previewImages: pages?.map((p) => p.image_url) ?? [],
-			artists,
-			tags,
-			groups,
-			categories,
-			languages,
-			parodies,
-			characters
-		},
-		randomComics
-	}
+  return {
+    slug,
+    comic: {
+      id: manga.id,
+      title: manga.title,
+      feature_image_url: manga.feature_image_url,
+      publishedAt: manga.created_at,
+      previewImages: pages?.map((p) => p.image_url) ?? [],
+      artists: flattenMeta(manga.manga_artists, 'artist_id'),
+      tags: flattenMeta(manga.manga_tags, 'tag_id'),
+      groups: flattenMeta(manga.manga_groups, 'group_id'),
+      categories: flattenMeta(manga.manga_categories, 'category_id'),
+      languages: flattenMeta(manga.manga_languages, 'language_id'),
+      parodies: flattenMeta(manga.manga_parodies, 'parody_id'),
+      characters: flattenMeta(manga.manga_characters, 'character_id')
+    },
+    randomComics,
+    meta: {
+      title: `${manga.title} | SusManga`,
+      description,
+      canonical: canonicalUrl,
+      robots: 'index,follow',
+      keywords: [
+        manga.title,
+        ...flattenMeta(manga.manga_tags, 'tag_id').map(t => t.name),
+        ...flattenMeta(manga.manga_artists, 'artist_id').map(a => a.name),
+        'manga', 'doujinshi', 'hentai', 'SusManga'
+      ].join(', '),
+      ogTitle: `${manga.title} | SusManga`,
+      ogDescription: description,
+      ogImage,
+      ogUrl: canonicalUrl,
+      twitterCard: 'summary_large_image',
+      twitterTitle: `${manga.title} | SusManga`,
+      twitterDescription: description,
+      twitterImage: ogImage,
+      structuredData: JSON.stringify(structuredData)
+    }
+  }
 }
