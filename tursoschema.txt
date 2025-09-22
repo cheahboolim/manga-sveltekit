@@ -1,0 +1,190 @@
+-- Turso/SQLite Schema for Manga Website
+-- Updated to match complete Supabase schema with all indexes
+-- Note: SQLite doesn't support GIN indexes, so gin_trgm_ops indexes are converted to regular indexes
+
+-- Artists table
+CREATE TABLE artists (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE,
+  slug TEXT UNIQUE
+);
+
+CREATE INDEX idx_artists_name ON artists(name);
+CREATE INDEX idx_artists_name_ilike ON artists(name); -- Note: SQLite doesn't support GIN, using regular index
+
+-- Categories table  
+CREATE TABLE categories (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE,
+  slug TEXT UNIQUE
+);
+
+CREATE INDEX idx_categories_name ON categories(name);
+CREATE INDEX idx_categories_name_ilike ON categories(name);
+
+-- Characters table
+CREATE TABLE characters (
+  id TEXT PRIMARY KEY, -- Will store UUID as TEXT
+  name TEXT NOT NULL UNIQUE,
+  slug TEXT NOT NULL UNIQUE
+);
+
+CREATE INDEX idx_characters_name ON characters(name);
+CREATE INDEX idx_characters_name_ilike ON characters(name);
+
+-- Groups table
+CREATE TABLE groups (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE,
+  slug TEXT UNIQUE
+);
+
+CREATE INDEX idx_groups_name ON groups(name);
+CREATE INDEX idx_groups_name_ilike ON groups(name);
+
+-- Languages table
+CREATE TABLE languages (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE,
+  slug TEXT UNIQUE
+);
+
+CREATE INDEX idx_languages_name ON languages(name);
+CREATE INDEX idx_languages_name_ilike ON languages(name);
+
+-- Parodies table
+CREATE TABLE parodies (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE,
+  slug TEXT UNIQUE
+);
+
+CREATE INDEX idx_parodies_name ON parodies(name);
+CREATE INDEX idx_parodies_name_ilike ON parodies(name);
+
+-- Tags table
+CREATE TABLE tags (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE,
+  slug TEXT UNIQUE
+);
+
+CREATE INDEX idx_tags_name ON tags(name);
+CREATE INDEX idx_tags_name_ilike ON tags(name);
+
+-- Main manga table
+CREATE TABLE manga (
+  id TEXT PRIMARY KEY, -- Will store UUID as TEXT
+  manga_id TEXT NOT NULL,
+  title TEXT NOT NULL,
+  feature_image_url TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_manga_title ON manga(title);
+CREATE INDEX idx_manga_title_ilike ON manga(title);
+CREATE INDEX idx_manga_created_at ON manga(created_at DESC);
+
+-- Pages table
+CREATE TABLE pages (
+  id TEXT PRIMARY KEY, -- Will store UUID as TEXT
+  manga_id TEXT,
+  page_number INTEGER NOT NULL,
+  image_url TEXT NOT NULL,
+  FOREIGN KEY (manga_id) REFERENCES manga (id) ON DELETE CASCADE
+);
+
+-- Slug mapping table
+CREATE TABLE slug_map (
+  slug TEXT PRIMARY KEY,
+  manga_id TEXT,
+  FOREIGN KEY (manga_id) REFERENCES manga (id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_slug_map_manga_id ON slug_map(manga_id);
+
+-- Junction tables for many-to-many relationships
+
+-- Manga-Artists relationship
+CREATE TABLE manga_artists (
+  manga_id TEXT NOT NULL,
+  artist_id INTEGER NOT NULL,
+  PRIMARY KEY (manga_id, artist_id),
+  FOREIGN KEY (manga_id) REFERENCES manga (id) ON DELETE CASCADE,
+  FOREIGN KEY (artist_id) REFERENCES artists (id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_manga_artists_manga_id ON manga_artists(manga_id);
+CREATE INDEX idx_manga_artists_artist_id ON manga_artists(artist_id);
+
+-- Manga-Categories relationship
+CREATE TABLE manga_categories (
+  manga_id TEXT NOT NULL,
+  category_id INTEGER NOT NULL,
+  PRIMARY KEY (manga_id, category_id),
+  FOREIGN KEY (manga_id) REFERENCES manga (id) ON DELETE CASCADE,
+  FOREIGN KEY (category_id) REFERENCES categories (id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_manga_categories_manga_id ON manga_categories(manga_id);
+CREATE INDEX idx_manga_categories_category_id ON manga_categories(category_id);
+
+-- Manga-Characters relationship
+CREATE TABLE manga_characters (
+  manga_id TEXT NOT NULL,
+  character_id TEXT NOT NULL,
+  PRIMARY KEY (manga_id, character_id),
+  FOREIGN KEY (manga_id) REFERENCES manga (id) ON DELETE CASCADE,
+  FOREIGN KEY (character_id) REFERENCES characters (id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_manga_characters_manga_id ON manga_characters(manga_id);
+CREATE INDEX idx_manga_characters_character_id ON manga_characters(character_id);
+
+-- Manga-Groups relationship
+CREATE TABLE manga_groups (
+  manga_id TEXT NOT NULL,
+  group_id INTEGER NOT NULL,
+  PRIMARY KEY (manga_id, group_id),
+  FOREIGN KEY (manga_id) REFERENCES manga (id) ON DELETE CASCADE,
+  FOREIGN KEY (group_id) REFERENCES groups (id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_manga_groups_manga_id ON manga_groups(manga_id);
+CREATE INDEX idx_manga_groups_group_id ON manga_groups(group_id);
+
+-- Manga-Languages relationship
+CREATE TABLE manga_languages (
+  manga_id TEXT NOT NULL,
+  language_id INTEGER NOT NULL,
+  PRIMARY KEY (manga_id, language_id),
+  FOREIGN KEY (manga_id) REFERENCES manga (id) ON DELETE CASCADE,
+  FOREIGN KEY (language_id) REFERENCES languages (id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_manga_languages_manga_id ON manga_languages(manga_id);
+CREATE INDEX idx_manga_languages_language_id ON manga_languages(language_id);
+
+-- Manga-Parodies relationship
+CREATE TABLE manga_parodies (
+  manga_id TEXT NOT NULL,
+  parody_id INTEGER NOT NULL,
+  PRIMARY KEY (manga_id, parody_id),
+  FOREIGN KEY (manga_id) REFERENCES manga (id) ON DELETE CASCADE,
+  FOREIGN KEY (parody_id) REFERENCES parodies (id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_manga_parodies_manga_id ON manga_parodies(manga_id);
+CREATE INDEX idx_manga_parodies_parody_id ON manga_parodies(parody_id);
+
+-- Manga-Tags relationship
+CREATE TABLE manga_tags (
+  manga_id TEXT NOT NULL,
+  tag_id INTEGER NOT NULL,
+  PRIMARY KEY (manga_id, tag_id),
+  FOREIGN KEY (manga_id) REFERENCES manga (id) ON DELETE CASCADE,
+  FOREIGN KEY (tag_id) REFERENCES tags (id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_manga_tags_manga_id ON manga_tags(manga_id);
+CREATE INDEX idx_manga_tags_tag_id ON manga_tags(tag_id);
