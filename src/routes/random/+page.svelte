@@ -1,5 +1,3 @@
-//Supabase version of random page
-
 <script lang="ts">
 	import RandomComics from '$lib/components/RandomComics.svelte';
 	import TrafficStarsAd from '$lib/components/TrafficStarsAd.svelte';
