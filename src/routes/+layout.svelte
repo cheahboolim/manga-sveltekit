@@ -16,7 +16,6 @@
 	import ExoClickSlider from '$lib/components/ExoClickSlider.svelte';
 	import ExoOutstreamAd from '$lib/components/ExoOutstreamAd.svelte';
 	import Coinpoll from '$lib/components/ownads/coinpoll.svelte'
-	import IframeAd from '$lib/trafficstars/IframeAd.svelte'
 
 	onMount(() => {
 		// Future setup: theme, auth, etc.
@@ -58,11 +57,6 @@
 	<!-- Mid Banner Ad -->
 	<div class="container mx-auto px-4 py-2">
 		<AAdsBanner />
-	</div>
-
-	<!-- Bottom Banner Ad -->
-	<div class="container mx-auto px-4 py-2">
-		<IframeAd />
 	</div>
 
 	<!-- App Install CTA -->
