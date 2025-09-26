@@ -159,9 +159,6 @@
     <div class="mt-12">
         <AAdsBanner />
     </div>
-    <div class="mt-8">
-        <NativeAds />
-    </div>
 </main>
 
 <style>
