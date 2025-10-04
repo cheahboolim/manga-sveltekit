@@ -1,0 +1,7 @@
+I need you to save the uploaded gambling ad image to this location. Since I cannot directly handle binary files, please:
+
+1. Save the uploaded image as "ggbet-bonus.jpg" in the "static/ads/" folder
+2. Then the component will use the local path
+
+The image should be saved as:
+static/ads/ggbet-bonus.jpg

@@ -16,6 +16,7 @@
 	import ExoClickSlider from '$lib/components/ExoClickSlider.svelte';
 	import ExoOutstreamAd from '$lib/components/ExoOutstreamAd.svelte';
 	import Coinpoll from '$lib/components/ownads/coinpoll.svelte'
+	import GgBetAds from '$lib/components/ownads/ggbetads.svelte';
 
 	onMount(() => {
 		// Future setup: theme, auth, etc.
@@ -46,23 +47,31 @@
 	<MainNav />
 
 	<!-- Top Banner Ad -->
-	<div class="container mx-auto px-4 py-2 flex justify-center">
-		<Coinpoll />
-	</div>
-
 	<main class="flex-1">
 		<slot />
 	</main>
 
-	<!-- Mid Banner Ad -->
-	<div class="container mx-auto px-4 py-2">
-		<AAdsBanner />
+	<!-- Responsive Ad Section -->
+	<div class="container mx-auto px-4 py-4">
+		<div class="flex flex-col lg:flex-row justify-center items-center gap-4 lg:gap-6">
+			<div class="flex justify-center">
+				<AAdsBanner />
+			</div>
+			<div class="flex justify-center">
+				<Coinpoll />
+			</div>
+			<div class="flex justify-center">
+				<GgBetAds />
+			</div>
+		</div>
 	</div>
 
 	<!-- App Install CTA -->
 	<div class="container mx-auto px-4 py-2">
 		<AppInstallBanner />
 	</div>
+
+
 
 	<Footer />
 

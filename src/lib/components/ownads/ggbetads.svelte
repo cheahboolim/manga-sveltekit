@@ -1,6 +1,6 @@
 <script lang="ts">
-  export let href: string = 'https://news.susmanga.com/7-meme';
-  export let image: string = 'https://cdn.susmanga.com/ads/cryptoads.jpg';
+  export let href: string = 'https://ggbetbestoffer.com/l/665aad1a09354e53af029ab2';
+  export let image: string = 'https://cdn.susmanga.com/ads/cover.png';
 </script>
 
 <a href={href} target="_blank" rel="noopener noreferrer" class="block w-[300px] h-[250px]">
@@ -9,7 +9,7 @@
     <div class="flex-1 overflow-hidden relative h-[125px]">
       <img 
         src={image} 
-        alt="Meme Coin PEPE" 
+        alt="GGBet Bonus Offer" 
         class="w-full h-full object-cover object-top" 
         on:error={(e) => {
           console.log('Image failed to load:', image);
@@ -21,13 +21,13 @@
     <!-- Text / CTA -->
     <div class="p-3 bg-[#121518] text-center h-[125px] flex flex-col justify-center">
       <p class="text-sm text-slate-200 mb-2 font-semibold">
-        💥 SusManga Meme Coin Poll is Live!
+        #1 Highest rated Gambling Site in Europe
       </p>
       <p class="text-xs text-slate-400 mb-3">
-        Vote for your favorite meme coin under $0.01 🍕💰
+        Susmanga users gets 20% extra bonus on first deposit!
       </p>
-      <span class="block w-full px-4 py-2 bg-pink-600 hover:bg-pink-500 rounded-md text-white font-semibold text-sm text-center">
-        Vote Now
+      <span class="block w-full px-4 py-2 bg-orange-600 hover:bg-orange-500 rounded-md text-white font-semibold text-sm text-center">
+        Claim Bonus
       </span>
     </div>
   </div>

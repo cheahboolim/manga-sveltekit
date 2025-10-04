@@ -1,0 +1,7 @@
+I need you to save the image you uploaded to this location. Since I cannot directly handle binary files, please:
+
+1. Save the uploaded image as "meme-coin-poll.jpg" in the "static/ads/" folder
+2. Then I'll update the component to use the local path
+
+The image should be saved as:
+static/ads/meme-coin-poll.jpg
