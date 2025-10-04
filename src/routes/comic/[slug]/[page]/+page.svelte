@@ -222,7 +222,6 @@
     <section aria-label="Similar manga recommendations">
       <SimilarManga tagIds={manga.tagIds} currentMangaId={manga.id} />
     </section>
-    <AAdsBanner />
     <section aria-label="Popular manga">
       <RandomPost comics={data.randomComics} />
     </section>
