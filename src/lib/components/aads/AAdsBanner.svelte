@@ -1,4 +1,4 @@
-<!-- src/lib/components/Ads/AAdsBlock.svelte -->
+<!-- A-Ads Banner - Ad ID: 2401977 -->
 <div class="w-full flex flex-col items-center justify-center my-6">
   <iframe
     data-aa="2401977"

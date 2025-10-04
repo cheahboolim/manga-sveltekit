@@ -5,8 +5,8 @@
     import RandomPost from '$lib/components/RandomPost.svelte';
     import ImageErrorRefreshButton from '$lib/components/ImageErrorRefreshButton.svelte';
     import { goto } from '$app/navigation';
-    import AAdsMiddleBanner from '$lib/components/AAdsMiddleBanner.svelte'
-    import AAdsBanner from '$lib/components/AAdsBanner.svelte'
+    import AAdsMiddleBanner from '$lib/components/aads/AAdsMiddleBanner.svelte'
+    import AAdsBanner from '$lib/components/aads/AAdsBanner.svelte'
 
     export let data;
     const { slug, comic, meta } = data;

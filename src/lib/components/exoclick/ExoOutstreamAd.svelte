@@ -20,6 +20,7 @@
   });
 </script>
 
+<!-- ExoClick Outstream Ad - Zone ID: 5689570 -->
 <div class="fixed bottom-4 right-4 z-50 w-[320px] max-w-full">
-  <ins class="eas6a97888e31 block w-full" data-zoneid="5684168"></ins>
+  <ins class="eas6a97888e37 block w-full" data-zoneid="5689570"></ins>
 </div>
