@@ -59,10 +59,27 @@
     else if (clickX > (imageWidth * 2) / 3) goToPage(currentPage + 1);
   }
 
+  // Promote title to a primitive so Svelte reactive statements don't warn
+  const mangaTitle = manga.title;
   let pageTitle: string;
   $: pageTitle = currentPage === 1
-    ? `Read ${manga.title} Online Free - Chapter ${currentPage} | SusManga`
-    : `${manga.title} - Page ${currentPage} Online Reader | SusManga`;
+    ? `Read ${mangaTitle} Online Free - Chapter ${currentPage} | SusManga`
+    : `${mangaTitle} - Page ${currentPage} Online Reader | SusManga`;
+
+  // Keyboard handler for image navigation (accessibility)
+  function handleImageKeydown(event: KeyboardEvent) {
+    if (event.key === 'ArrowLeft') {
+      goToPage(currentPage - 1);
+      event.preventDefault();
+    } else if (event.key === 'ArrowRight') {
+      goToPage(currentPage + 1);
+      event.preventDefault();
+    } else if (event.key === 'Enter' || event.key === ' ') {
+      // Treat Enter/Space as 'next page' for ease of navigation
+      goToPage(currentPage + 1);
+      event.preventDefault();
+    }
+  }
 </script>
 
 <svelte:head>
@@ -133,6 +150,7 @@
         <div
           class="relative cursor-pointer select-none"
           on:click={handleImageClick}
+          on:keydown={handleImageKeydown}
           role="button"
           tabindex="0"
           aria-label="Click left or right to navigate pages"

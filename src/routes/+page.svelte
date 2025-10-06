@@ -1,4 +1,13 @@
 <script lang="ts">
+	import AAdsMiddleBanner from '$lib/components/aads/AAdsMiddleBanner.svelte';
+	import RandomHome from '$lib/components/RandomHome.svelte';
+	import SearchBanner from '$lib/components/SearchBanner.svelte';
+	import ExoClickSlider from '$lib/components/exoclick/ExoClickSlider.svelte';
+	import ExoOutstreamAd from '$lib/components/exoclick/ExoOutstreamAd.svelte';
+	import MobilePop from '$lib/components/exoclick/MobilePop.svelte';
+	import ExoBannerAd from '$lib/components/exoclick/ExoBannerAd.svelte';
+
+	export let data;
 </script>
 
 <svelte:head>
