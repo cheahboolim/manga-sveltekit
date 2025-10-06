@@ -1,7 +1,6 @@
 <script lang="ts">
   import { seo } from '$lib/seo';
   import AAdsMiddleBanner from '$lib/components/aads/AAdsMiddleBanner.svelte';
-  import TrafficStarsAd from '$lib/components/TrafficStarsAd.svelte';
 
   export let data;
 
