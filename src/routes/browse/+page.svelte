@@ -2,6 +2,10 @@
     import AAdsBanner from '$lib/components/aads/AAdsBanner.svelte'
     import ComicGrid from '$lib/components/ComicGrid.svelte';
     import AAdsMiddleBanner from '$lib/components/aads/AAdsMiddleBanner.svelte'
+    import ExoClickSlider from '$lib/components/exoclick/ExoClickSlider.svelte';
+    import ExoOutstreamAd from '$lib/components/exoclick/ExoOutstreamAd.svelte';
+    import MobilePop from '$lib/components/exoclick/MobilePop.svelte';
+    import ExoBannerAd from '$lib/components/exoclick/ExoBannerAd.svelte';
     import { goto } from '$app/navigation'
     
     export let data
@@ -39,6 +43,11 @@
 </svelte:head>
 
 <main class="max-w-6xl mx-auto px-4 py-8">
+    <!-- A-Ads Banner above content -->
+    <div class="my-6">
+        <AAdsMiddleBanner />
+    </div>
+    
     <!-- Browse Categories Section -->
     <div class="text-center py-16">
         <h1 class="text-6xl md:text-7xl font-bold text-[#FF1493] mb-4">Browse</h1>
@@ -160,7 +169,16 @@
     <div class="mt-12">
         <AAdsBanner />
     </div>
+    
+    <div class="mt-8">
+        <ExoBannerAd />
+    </div>
 </main>
+
+<!-- ExoClick Video Ads (full width) -->
+<ExoClickSlider />
+<ExoOutstreamAd />
+<MobilePop />
 
 <style>
     .line-clamp-2 {

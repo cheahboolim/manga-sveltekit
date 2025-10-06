@@ -2,6 +2,10 @@
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	import type { ActionData, PageData } from './$types';
+	import ExoClickSlider from '$lib/components/exoclick/ExoClickSlider.svelte';
+	import ExoOutstreamAd from '$lib/components/exoclick/ExoOutstreamAd.svelte';
+	import MobilePop from '$lib/components/exoclick/MobilePop.svelte';
+	import ExoBannerAd from '$lib/components/exoclick/ExoBannerAd.svelte';
 
 	export let data: PageData;
 	export let form: ActionData; // This prop receives the return value from server actions
@@ -160,7 +164,17 @@
 			{/if}
 		</div>
 	</div>
+	
+	<!-- ExoClick Banner Ad -->
+	<div style="margin: 2rem 0; text-align: center;">
+		<ExoBannerAd />
+	</div>
 </div>
+
+<!-- ExoClick Video Ads (full width) -->
+<ExoClickSlider />
+<ExoOutstreamAd />
+<MobilePop />
 
 <!-- Styles are unchanged -->
 <style>

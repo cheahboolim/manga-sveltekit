@@ -7,6 +7,8 @@
   import AAdsMiddleBanner from '$lib/components/aads/AAdsMiddleBanner.svelte';
   import AAdsBanner from '$lib/components/aads/AAdsBanner.svelte';
   import BlueBallsAd from '$lib/components/ownads/BlueBallsAd.svelte';
+  import MobilePop from '$lib/components/exoclick/MobilePop.svelte';
+  import ExoBannerAd from '$lib/components/exoclick/ExoBannerAd.svelte';
 
   export let data: {
     slug: string;
@@ -219,6 +221,7 @@
 
   <div class="space-y-8">
     <AAdsMiddleBanner />
+    <ExoBannerAd />
     <section aria-label="Similar manga recommendations">
       <SimilarManga tagIds={manga.tagIds} currentMangaId={manga.id} />
     </section>
@@ -230,6 +233,8 @@
     </section>
   </div>
 </main>
+
+<MobilePop />
 
 <style>
   main {

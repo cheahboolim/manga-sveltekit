@@ -10,24 +10,14 @@
 <div 
   id="frame"
   class="ad-banner-frame w-full flex flex-col items-center justify-center my-6" 
-  style="width: {width}px; height: auto; margin: auto; z-index: {zIndex};"
+  style="width: {width}px; margin: auto; z-index: {zIndex}; height: auto;"
 >
   <iframe 
     data-aa={adId}
-    src="https://ad.a-ads.com/{adId}?size={width}x{height}"
+    src="//ad.a-ads.com/{adId}/?size={width}x{height}"
     title="Advertisement"
-    style="border: 0; padding: 0; width: {width}px; height: {height}px; overflow: hidden; display: block; margin: auto; background-color: transparent;"
+    style="border: 0; padding: 0; width: {width}px; height: {height}px; overflow: hidden; display: block; margin: auto;"
   ></iframe>
-  
-  <a
-    id="frame-link"
-    href="https://aads.com/campaigns/new/?source_id={adId}&source_type=ad_unit&partner={adId}"
-    class="text-xs text-right mt-1 text-gray-400 hover:text-white transition"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    Advertise here
-  </a>
 </div>
 
 <style>

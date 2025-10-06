@@ -18,6 +18,11 @@
     };
   };
   import TrafficStarsAd from '$lib/components/TrafficStarsAd.svelte';
+  import ExoClickSlider from '$lib/components/exoclick/ExoClickSlider.svelte';
+  import ExoOutstreamAd from '$lib/components/exoclick/ExoOutstreamAd.svelte';
+  import MobilePop from '$lib/components/exoclick/MobilePop.svelte';
+  import ExoBannerAd from '$lib/components/exoclick/ExoBannerAd.svelte';
+  import AAdsMiddleBanner from '$lib/components/aads/AAdsMiddleBanner.svelte';
 </script>
 
 <svelte:head>
@@ -39,6 +44,10 @@
 </svelte:head>
 
 <main class="container mx-auto px-4 py-12">
+  <!-- A-Ads Banner above content -->
+  <div class="my-6">
+    <AAdsMiddleBanner />
+  </div>
   <h1 class="text-3xl font-bold mb-6">
     Search results for: <span class="text-pink-500">{data.query}</span>
   </h1>
@@ -76,4 +85,14 @@
       {/each}
     </div>
   {/if}
+  
+  <!-- ExoClick Banner Ad -->
+  <div class="mt-8">
+    <ExoBannerAd />
+  </div>
 </main>
+
+<!-- ExoClick Video Ads (full width) -->
+<ExoClickSlider />
+<ExoOutstreamAd />
+<MobilePop />

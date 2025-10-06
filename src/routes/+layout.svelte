@@ -13,8 +13,6 @@
 	import BlueBallsAd from '$lib/components/ownads/BlueBallsAd.svelte';
 	import AppInstallBanner from '$lib/components/AppInstallBanner.svelte';
 	import AAdsBanner from '$lib/components/aads/AAdsBanner.svelte';
-	import ExoClickSlider from '$lib/components/exoclick/ExoClickSlider.svelte';
-	import ExoOutstreamAd from '$lib/components/exoclick/ExoOutstreamAd.svelte';
 	import Coinpoll from '$lib/components/ownads/coinpoll.svelte'
 	import GgBetAds from '$lib/components/ownads/ggbetads.svelte';
 
@@ -74,8 +72,4 @@
 
 
 	<Footer />
-
-	<!-- Video Slider Ads (full width, no container to avoid breaking layout) -->
-	<ExoClickSlider />
-	<ExoOutstreamAd />
 </div>

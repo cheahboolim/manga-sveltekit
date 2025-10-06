@@ -1,5 +1,6 @@
 <script lang="ts">
   import { seo } from '$lib/seo';
+  import AAdsMiddleBanner from '$lib/components/aads/AAdsMiddleBanner.svelte';
   import TrafficStarsAd from '$lib/components/TrafficStarsAd.svelte';
 
   export let data;
@@ -57,6 +58,11 @@
 </svelte:head>
 
 <main class="container mx-auto px-4 py-8 max-w-7xl">
+  <!-- A-Ads Banner above content -->
+  <div class="my-6">
+    <AAdsMiddleBanner />
+  </div>
+  
   <nav aria-label="Breadcrumb" class="mb-6">
     <ol class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-300">
       <li><a href="/" class="hover:text-pink-500 transition-colors">Home</a></li>

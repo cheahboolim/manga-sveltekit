@@ -2,6 +2,7 @@
   import { writable, derived } from 'svelte/store';
   import { seo } from '$lib/seo.ts';
   import { onMount } from 'svelte';
+  import AAdsMiddleBanner from '$lib/components/aads/AAdsMiddleBanner.svelte';
 
   export let data: {
     grouped: Record<string, { id: string; name: string; slug: string }[]>;
@@ -89,6 +90,11 @@
 </svelte:head>
 
 <main class="max-w-6xl mx-auto px-4 py-8">
+  <!-- A-Ads Banner above content -->
+  <div class="my-6">
+    <AAdsMiddleBanner />
+  </div>
+  
   <!-- SEO-optimized header section -->
   <header class="mb-8">
     <h1 class="text-3xl font-bold mb-4">Browse Manga Parodies A-Z</h1>

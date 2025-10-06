@@ -2,6 +2,10 @@
 <script lang="ts">
 	import AAdsBanner from '$lib/components/aads/AAdsBanner.svelte'
 	import AAdsMiddleBanner from '$lib/components/aads/AAdsMiddleBanner.svelte'
+	import ExoClickSlider from '$lib/components/exoclick/ExoClickSlider.svelte';
+	import ExoOutstreamAd from '$lib/components/exoclick/ExoOutstreamAd.svelte';
+	import MobilePop from '$lib/components/exoclick/MobilePop.svelte';
+	import ExoBannerAd from '$lib/components/exoclick/ExoBannerAd.svelte';
 	import { goto } from '$app/navigation'
 	
 	export let data
@@ -140,8 +144,17 @@
 	<div class="mt-12">
 		<AAdsBanner />
 	</div>
+	
+	<div class="mt-8">
+		<ExoBannerAd />
+	</div>
 
 </main>
+
+<!-- ExoClick Video Ads (full width) -->
+<ExoClickSlider />
+<ExoOutstreamAd />
+<MobilePop />
 
 <style>
 	.line-clamp-2 {

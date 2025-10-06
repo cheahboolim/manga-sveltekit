@@ -2,6 +2,11 @@
   import { writable, derived } from 'svelte/store';
   import { seo } from '$lib/seo';
   import { onMount } from 'svelte';
+  import AAdsMiddleBanner from '$lib/components/aads/AAdsMiddleBanner.svelte';
+  import ExoClickSlider from '$lib/components/exoclick/ExoClickSlider.svelte';
+  import ExoOutstreamAd from '$lib/components/exoclick/ExoOutstreamAd.svelte';
+  import MobilePop from '$lib/components/exoclick/MobilePop.svelte';
+  import ExoBannerAd from '$lib/components/exoclick/ExoBannerAd.svelte';
 
   export let data: {
     grouped: Record<string, { id: number; name: string; slug: string | null }[]>;
@@ -89,6 +94,11 @@
 </svelte:head>
 
 <main class="max-w-6xl mx-auto px-4 py-8">
+  <!-- A-Ads Banner above content -->
+  <div class="my-6">
+    <AAdsMiddleBanner />
+  </div>
+  
   <!-- SEO-optimized header section -->
   <header class="mb-8">
     <h1 class="text-3xl font-bold mb-4">Browse Manga Tags & Categories A-Z</h1>
@@ -228,7 +238,17 @@
       </p>
     </div>
   </footer>
+  
+  <!-- ExoClick Banner Ad -->
+  <div class="my-8 text-center">
+    <ExoBannerAd />
+  </div>
 </main>
+
+<!-- ExoClick Video Ads (full width) -->
+<ExoClickSlider />
+<ExoOutstreamAd />
+<MobilePop />
 
 <style>
   .scroll-mt-20 {
