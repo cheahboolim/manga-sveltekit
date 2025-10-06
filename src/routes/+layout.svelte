@@ -11,6 +11,7 @@
 	import Footer from '$lib/components/Footer.svelte';
 	import BlueBallsAd from '$lib/components/ownads/BlueBallsAd.svelte';
 	import AppInstallBanner from '$lib/components/AppInstallBanner.svelte';
+	import AgeConsentBanner from '$lib/components/AgeConsentBanner.svelte';
 	import AAdsBanner from '$lib/components/aads/AAdsBanner.svelte';
 	import Coinpoll from '$lib/components/ownads/coinpoll.svelte'
 	import GgBetAds from '$lib/components/ownads/ggbetads.svelte';
@@ -69,6 +70,9 @@
 
 <!-- Root wrapper -->
 <div class="relative flex min-h-screen flex-col bg-background text-foreground antialiased">
+	<!-- Age Consent Banner -->
+	<AgeConsentBanner />
+
 	<MainNav />
 
 	<!-- Top Banner Ad -->
