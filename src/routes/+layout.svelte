@@ -14,9 +14,35 @@
 	import AAdsBanner from '$lib/components/aads/AAdsBanner.svelte';
 	import Coinpoll from '$lib/components/ownads/coinpoll.svelte'
 	import GgBetAds from '$lib/components/ownads/ggbetads.svelte';
+	import { captureTrackingToken } from '$lib/exoclick';
+	import { trackTimeSpent } from '$lib/exoclick-tracking';
+
+	let previousUser = null;
+	let timeSpentTimer = null;
+	const TIME_SPENT_THRESHOLD = 5 * 60 * 1000; // 5 minutes
 
 	onMount(() => {
-		// Future setup: theme, auth, etc.
+		// Capture ExoClick tracking token from URL parameters
+		captureTrackingToken();
+
+		// Track time spent on site
+		let startTime = Date.now();
+		timeSpentTimer = setInterval(() => {
+			const elapsed = Date.now() - startTime;
+			if (elapsed >= TIME_SPENT_THRESHOLD) {
+				console.log('User spent significant time, tracking time spent conversion');
+				trackTimeSpent();
+				clearInterval(timeSpentTimer);
+				timeSpentTimer = null;
+			}
+		}, 60000); // Check every minute
+
+		return () => {
+			unsubscribe();
+			if (timeSpentTimer) {
+				clearInterval(timeSpentTimer);
+			}
+		};
 	});
 
 	// Track page views on navigation

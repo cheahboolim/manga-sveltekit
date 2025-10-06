@@ -1,4 +1,5 @@
 import { browser } from '$app/environment';
+import { trackPageView as trackExoClickPageView } from './exoclick-tracking';
 
 export function trackPageView(url, title) {
     if (browser) {
@@ -10,6 +11,9 @@ export function trackPageView(url, title) {
             page_location: url.href,
             page_search: url.search
         });
+
+        // Also track ExoClick page view conversion
+        trackExoClickPageView();
     }
 }
 

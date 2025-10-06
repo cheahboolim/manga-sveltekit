@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { trackEvent } from '$lib/gtm';
+	import { trackUserRegistration } from '$lib/exoclick-tracking';
 
 	let os = 'your device';
 	let deferredPrompt: Event | null = null;
@@ -77,6 +78,8 @@
 				category: 'PWA',
 				label: 'App Installed'
 			});
+			// Track ExoClick PWA app install conversion (using user registration value)
+			trackUserRegistration();
 			showBanner = false;
 		});
 	});

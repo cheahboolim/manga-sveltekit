@@ -7,11 +7,18 @@
     import { goto } from '$app/navigation';
     import AAdsMiddleBanner from '$lib/components/aads/AAdsMiddleBanner.svelte'
     import AAdsBanner from '$lib/components/aads/AAdsBanner.svelte'
+    import { trackContentConsumption } from '$lib/exoclick-tracking'
+    import { onMount } from 'svelte'
 
     export let data;
     const { slug, comic, meta } = data;
 
     let featureImageError = false;
+
+    onMount(() => {
+        // Track content consumption when user views a comic
+        trackContentConsumption();
+    });
 
     function refreshFeatureImage() {
         goto(`/comic/${slug}`, { invalidateAll: true });
