@@ -17,7 +17,6 @@
       next: string | null;
     };
   };
-  import TrafficStarsAd from '$lib/components/TrafficStarsAd.svelte';
   import ExoClickSlider from '$lib/components/exoclick/ExoClickSlider.svelte';
   import ExoOutstreamAd from '$lib/components/exoclick/ExoOutstreamAd.svelte';
   import MobilePop from '$lib/components/exoclick/MobilePop.svelte';

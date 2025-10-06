@@ -9,7 +9,6 @@
 
 	import MainNav from '$lib/components/MainNav.svelte';
 	import Footer from '$lib/components/Footer.svelte';
-	import BannerAd from '$lib/components/adsterra/BannerAd.svelte';
 	import BlueBallsAd from '$lib/components/ownads/BlueBallsAd.svelte';
 	import AppInstallBanner from '$lib/components/AppInstallBanner.svelte';
 	import AAdsBanner from '$lib/components/aads/AAdsBanner.svelte';
