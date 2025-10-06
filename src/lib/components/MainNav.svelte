@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import { Menu, X, Search } from 'lucide-svelte';
+	import { Menu, X, Search, Smartphone } from 'lucide-svelte';
 	import { writable, get } from 'svelte/store';
 
 	let search = '';
@@ -10,7 +10,7 @@
 	const mobileMenuOpen = writable(false);
 
 	const navItems = [
-		{ title: 'Random', href: '/random', special: true },
+		{ title: 'Install App', href: '#', special: true },
 		{ title: 'Tags', href: '/p/tags', mobileTitle: 'Tags' },
 		{ title: 'Parodies', href: '/p/parodies', mobileTitle: 'Parodies' },
 		{ title: 'Characters', href: '/p/characters', mobileTitle: 'Characters' },
@@ -32,8 +32,22 @@
 		mobileMenuOpen.set(false);
 	}
 
-	function navigateToRandom() {
-		window.location.href = '/random';
+	// PWA install prompt handling
+	let deferredPrompt: Event | null = null;
+	let canInstall = false;
+
+	function promptInstall() {
+		if (deferredPrompt) {
+			(deferredPrompt as any).prompt();
+			(deferredPrompt as any).userChoice.then((choiceResult: any) => {
+				// Optionally track events here
+				deferredPrompt = null;
+				canInstall = false;
+			});
+		} else {
+			// Fallback: open mobile install instructions or show a message
+			alert('To install the app, use your browser menu and select "Add to Home screen".');
+		}
 		closeMobileMenu();
 	}
 
@@ -48,6 +62,18 @@
 		
 		updateMobile();
 		window.addEventListener('resize', updateMobile);
+
+		// Listen for PWA beforeinstallprompt
+		window.addEventListener('beforeinstallprompt', (e: Event) => {
+			e.preventDefault();
+			deferredPrompt = e;
+			canInstall = true;
+		});
+
+		window.addEventListener('appinstalled', () => {
+			deferredPrompt = null;
+			canInstall = false;
+		});
 
 		const unsub = mobileMenuOpen.subscribe((open) => {
 			if (typeof document !== 'undefined') {
@@ -142,17 +168,33 @@
 					<!-- Desktop Navigation -->
 					<nav class="flex items-center space-x-1 lg:space-x-2">
 						{#each navItems as item}
-							<a href={item.href} class="flex-shrink-0">
+							{#if item.href && item.href !== '#'}
+								<a href={item.href} class="flex-shrink-0" on:click={closeMobileMenu}>
+									<button
+											class={`${
+												item.special
+													? 'bg-[#FF1493] hover:bg-[#e01382] text-white'
+													: 'text-foreground/80 hover:text-foreground hover:bg-white/5'
+											} px-3 lg:px-4 py-2 rounded text-sm lg:text-base transition-colors whitespace-nowrap`}
+										>
+										{item.title}
+									</button>
+								</a>
+							{:else}
 								<button
 									class={`${
 										item.special
 											? 'bg-[#FF1493] hover:bg-[#e01382] text-white'
 											: 'text-foreground/80 hover:text-foreground hover:bg-white/5'
-									} px-3 lg:px-4 py-2 rounded text-sm lg:text-base transition-colors whitespace-nowrap`}
+									} px-4 lg:px-5 py-2 rounded-full text-sm lg:text-base transition-colors whitespace-nowrap flex items-center gap-3`}
+									on:click={promptInstall}
+									aria-label="Install App"
 								>
-									{item.title}
+									<Smartphone class="w-4 h-4" />
+									<span class="hidden sm:inline">{item.title}</span>
+									<span class="inline sm:hidden">Install</span>
 								</button>
-							</a>
+							{/if}
 						{/each}
 					</nav>
 				</div>
@@ -190,14 +232,16 @@
 
 			<!-- Menu Content -->
 			<div class="flex-1 overflow-y-auto p-4">
-				<!-- Random Button -->
+				<!-- Install App Button -->
 				<div class="mb-6">
 					<button 
 						type="button"
-						class="w-full bg-[#FF1493] hover:bg-[#e01382] text-white px-6 py-3 rounded-lg text-center transition-colors text-base font-medium" 
-						on:click={navigateToRandom}
+						class="w-full bg-[#FF1493] hover:bg-[#e01382] text-white px-6 py-3 rounded-lg text-center transition-colors text-base font-medium flex items-center justify-center gap-3" 
+						on:click={promptInstall}
+						aria-label="Install App"
 					>
-						Random
+						<Smartphone class="w-5 h-5" />
+						<span>Install App</span>
 					</button>
 				</div>
 
