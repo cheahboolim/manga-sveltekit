@@ -45,7 +45,7 @@
 				<div class="flex flex-col gap-3 sm:flex-row sm:justify-center">
 					<button
 						on:click={acceptConsent}
-						class="rounded-lg bg-blue-600 px-6 py-2 text-white font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-colors"
+						class="rounded-lg bg-pink-600 px-6 py-2 text-white font-medium hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-colors"
 					>
 						I am 18+ - Enter Site
 					</button>
@@ -59,7 +59,7 @@
 				</div>
 
 				<div class="mt-4 text-xs text-gray-400">
-					By entering, you agree to our <a href="/p/terms" class="text-blue-400 hover:text-blue-300 underline">Terms of Service</a> and <a href="/p/privacy" class="text-blue-400 hover:text-blue-300 underline">Privacy Policy</a>
+					By entering, you agree to our <a href="/p/terms" class="text-pink-400 hover:text-pink-300 underline">Terms of Service</a> and <a href="/p/privacy" class="text-pink-400 hover:text-pink-300 underline">Privacy Policy</a>
 				</div>
 			</div>
 		</div>
