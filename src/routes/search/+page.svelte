@@ -70,19 +70,42 @@
       {/each}
     </div>
 
-    <div class="mt-10 flex flex-wrap gap-2 justify-center">
+    <nav class="flex justify-center items-center flex-wrap gap-2 mb-8" aria-label="Pagination">
+      {#if data.page > 1}
+        <a
+          href={`/search?q=${encodeURIComponent(data.query)}&page=${data.page - 1}`}
+          class="px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-700 transition-colors"
+          aria-label="Previous page"
+        >
+          ← Previous
+        </a>
+      {/if}
       {#each Array(data.totalPages) as _, i}
-        {#if data.query}
+        {#if i + 1 === 1 || i + 1 === data.totalPages || Math.abs(i + 1 - data.page) <= 2}
           <a
             href={`/search?q=${encodeURIComponent(data.query)}&page=${i + 1}`}
-            class="px-4 py-2 rounded border border-white text-white hover:bg-white hover:text-black transition"
-            class:selected={data.page === i + 1}
+            class={i + 1 === data.page
+              ? 'px-3 py-2 rounded bg-pink-600 text-white font-bold'
+              : 'px-3 py-2 rounded border bg-white text-black hover:bg-gray-100 transition-colors'}
+            aria-label={`Go to page ${i + 1}`}
+            aria-current={i + 1 === data.page ? 'page' : undefined}
           >
             {i + 1}
           </a>
+        {:else if i + 1 === data.page - 3 || i + 1 === data.page + 3}
+          <span class="px-2 text-gray-500">...</span>
         {/if}
       {/each}
-    </div>
+      {#if data.page < data.totalPages}
+        <a
+          href={`/search?q=${encodeURIComponent(data.query)}&page=${data.page + 1}`}
+          class="px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-700 transition-colors"
+          aria-label="Next page"
+        >
+          Next →
+        </a>
+      {/if}
+    </nav>
   {/if}
   
   <!-- ExoClick Banner Ad -->
