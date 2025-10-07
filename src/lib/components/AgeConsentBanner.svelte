@@ -4,8 +4,10 @@
 
 	let showBanner = false;
 	let hasConsented = false;
+	let isClient = false;
 
 	onMount(() => {
+		isClient = true;
 		// Check if user has already consented
 		const consent = localStorage.getItem('susmanga_18_consent');
 		if (consent === 'accepted') {
@@ -27,7 +29,7 @@
 	}
 </script>
 
-{#if showBanner && !hasConsented}
+{#if isClient && showBanner && !hasConsented}
 	<!-- Consent Banner Overlay -->
 	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 backdrop-blur-sm">
 		<div class="mx-4 max-w-md rounded-lg bg-gray-900 p-6 shadow-2xl border border-gray-700">
